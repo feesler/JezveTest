@@ -1,0 +1,21 @@
+{
+    "extends": "airbnb-base",
+    "env": {
+        "browser": true,
+        "node": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 2017,
+        "sourceType": "module"
+    },
+    "rules": {
+        "indent": ["error", 4],
+        "no-continue": ["warn"],
+        "class-methods-use-this": ["warn"],
+        "import/prefer-default-export": ["warn"],
+        "import/extensions": ["off"],
+        "import/no-cycle": ["warn"],
+        "no-restricted-syntax": ["warn"],
+        "no-await-in-loop": ["warn"]
+    }
+}
