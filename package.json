@@ -1,6 +1,6 @@
 {
   "name": "jezve-test",
-  "version": "0.9.2",
+  "version": "0.9.4",
   "description": "",
   "main": "./src/index.js",
   "type": "module",
@@ -48,7 +48,7 @@
   },
   "exports": {
     ".": "./src/index.js",
-    "BrowserEnvironment": "./src/env/BrowserEnvironment.js",
-    "NodeEnvironment": "./src/env/NodeEnvironment.js"
+    "./BrowserEnvironment": "./src/env/BrowserEnvironment.js",
+    "./NodeEnvironment": "./src/env/NodeEnvironment.js"
   }
 }
