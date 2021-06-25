@@ -5,7 +5,7 @@ const __dirname = dirname(__filename);
 
 export default {
     mode: 'production',
-    target: ['web', 'es5'],
+    target: 'browserslist',
     entry: './src/index.js',
     output: {
         filename: 'index.js',
