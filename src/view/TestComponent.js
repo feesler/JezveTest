@@ -31,13 +31,8 @@ export class TestComponent {
             return null;
         }
 
-        let instance;
-        try {
-            instance = new this(...args);
-            await instance.parse();
-        } catch (e) {
-            return null;
-        }
+        const instance = new this(...args);
+        await instance.parse();
 
         return instance;
     }
