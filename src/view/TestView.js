@@ -37,7 +37,7 @@ export class TestView {
             throw new Error('Wrong action specified');
         }
 
-        if (!this.content && !this.header) {
+        if (!this.content) {
             await this.parse();
         }
 
