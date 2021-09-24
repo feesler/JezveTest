@@ -504,12 +504,6 @@ export class BrowserEnvironment extends Environment {
             ? options.appPath
             : '/';
 
-        if (origin.includes('jezve.net')) {
-            this.base += '/money/';
-        } else {
-            this.base += '/';
-        }
-
         await this.app.init();
 
         this.startbtn = document.getElementById('startbtn');
