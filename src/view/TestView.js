@@ -167,8 +167,6 @@ export class TestView {
             throw new Error('Invalid expected state object');
         }
 
-        checkObjValue(this.msgPopup, (stateObj.msgPopup) ? stateObj.msgPopup : null);
-        checkObjValue(this.header, stateObj.header);
         await this.checkVisibility(this.content, stateObj.visibility);
         this.checkValues(stateObj.values);
 
