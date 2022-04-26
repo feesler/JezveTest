@@ -34,6 +34,10 @@ export class NodeEnvironment extends Environment {
         return this.page.url();
     }
 
+    isFullScenario() {
+        return process.argv.every((arg) => arg !== '-p');
+    }
+
     async parentNode(elem) {
         if (!elem) {
             return null;

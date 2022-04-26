@@ -13,6 +13,7 @@ export class Environment {
             'baseUrl',
             'url',
             'navigation',
+            'isFullScenario',
             'setErrorHandler',
             'goTo',
             'parentNode',
