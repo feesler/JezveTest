@@ -14,6 +14,10 @@ export function setupTest(env) {
     testEnv = env;
 }
 
+export function getEnv() {
+    return testEnv;
+}
+
 /**
  * Run action and add result to the list
  * @param {string} descr - description of test

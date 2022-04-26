@@ -22,6 +22,7 @@ export class BrowserEnvironment extends Environment {
         this.failRes = null;
         this.durationRes = null;
         this.base = null;
+        this.fullTestsCheck = null;
     }
 
     baseUrl() {
@@ -30,6 +31,10 @@ export class BrowserEnvironment extends Environment {
 
     async url() {
         return this.viewframe.contentWindow.location.href;
+    }
+
+    isFullScenario() {
+        return this.fullTestsCheck.checked;
     }
 
     async parentNode(elem) {
@@ -504,12 +509,6 @@ export class BrowserEnvironment extends Environment {
             ? options.appPath
             : '/';
 
-        if (origin.includes('jezve.net')) {
-            this.base += '/money/';
-        } else {
-            this.base += '/';
-        }
-
         await this.app.init();
 
         this.startbtn = document.getElementById('startbtn');
@@ -520,6 +519,7 @@ export class BrowserEnvironment extends Environment {
         this.viewframe = document.getElementById('viewframe');
         this.resContainer = document.querySelector('.results-container');
         this.toggleResBtn = document.getElementById('toggleresbtn');
+        this.fullTestsCheck = document.getElementById('fulltestscheck');
         this.restbl = document.getElementById('restbl');
         if (!this.startbtn
             || !this.totalRes
@@ -529,6 +529,7 @@ export class BrowserEnvironment extends Environment {
             || !this.viewframe
             || !this.resContainer
             || !this.toggleResBtn
+            || !this.fullTestsCheck
             || !this.restbl
         ) {
             throw new Error('Fail to init tests');

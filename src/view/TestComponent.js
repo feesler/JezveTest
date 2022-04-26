@@ -3,27 +3,54 @@ import {
     isObject,
     checkObjValue,
 } from '../utils.js';
+import { getEnv } from '../index.js';
 
 export class TestComponent {
-    constructor(parent, elem) {
-        if (!parent) {
-            throw new Error('Invalid parent specified');
-        }
-        if (!elem) {
-            throw new Error('Invalid element specified');
+    constructor(...args) {
+        this.model = {};
+
+        const parentSpecified = (args.length > 0);
+        if (parentSpecified) {
+            const parent = args[0];
+            if (!parent) {
+                throw new Error('Invalid parent specified');
+            }
+
+            this.parent = parent;
         }
 
-        this.elem = elem;
-        this.parent = parent;
+        const elemSpecified = (args.length > 1);
+        if (elemSpecified) {
+            const elem = args[1];
+            if (!elem) {
+                throw new Error('Invalid element specified');
+            }
 
-        this.environment = parent.environment;
-        if (this.environment) {
-            this.environment.inject(this);
+            this.elem = elem;
         }
     }
 
+    async parseContent() {
+        return {};
+    }
+
+    async buildModel() {
+        return {};
+    }
+
+    async updateModel() {
+        this.model = await this.buildModel(this.content);
+    }
+
     async parse() {
-        throw new Error('Not implemented');
+        this.content = await this.parseContent();
+        await this.postParse();
+
+        await this.updateModel();
+    }
+
+    /* eslint-disable-next-line no-empty-function */
+    async postParse() {
     }
 
     static async create(...args) {
@@ -38,11 +65,16 @@ export class TestComponent {
     }
 
     static async isVisible(item) {
-        if (!item || !item.elem || !item.environment) {
+        if (!item || !item.elem) {
             return false;
         }
 
-        return item.environment.isVisible(item.elem, true);
+        const env = getEnv();
+        if (!env) {
+            throw new Error('Invalid environment');
+        }
+
+        return env.isVisible(item.elem, true);
     }
 
     isActionAvailable(action) {
@@ -57,6 +89,40 @@ export class TestComponent {
         return this[action].call(this, data);
     }
 
+    async performAction(action) {
+        if (!isFunction(action)) {
+            throw new Error('Wrong action specified');
+        }
+
+        if (!this.content) {
+            await this.parse();
+        }
+
+        await action.call(this);
+
+        await this.parse();
+    }
+
+    /**
+     * Compare visibiliy of specified controls with expected mask
+     * In the controls object each value must be an object with 'elem' property containing pointer
+     *  to DOM element
+     * In the expected object each value must be a boolean value
+     * For false expected control may be null or invisible
+     * Both controls and expected object may contain nested objects
+     * Example:
+     *     controls : {
+     *         control_1 : { elem : Element },
+     *         control_2 : { childControl : { elem : Element } }
+     *     }
+     *     expected : {
+     *         control_1 : true,
+     *         control_2 : { childControl : true, invControl : false },
+     *         control_3 : false
+     *     }
+     * @param {Object} controls
+     * @param {Object} expected
+     */
     async checkVisibility(controls, expected) {
         let res;
 
@@ -79,9 +145,17 @@ export class TestComponent {
             const control = controls[countrolName];
 
             if (isObject(expVisible)) {
-                res = await this.checkVisibility(control, expVisible);
+                if (control && isFunction(control.checkVisibility)) {
+                    res = await control.checkVisibility(control.content, expVisible);
+                } else {
+                    res = await this.checkVisibility(control, expVisible);
+                }
             } else {
-                factVisible = !!control && await this.isVisible(control.elem, true);
+                const env = getEnv();
+                if (!env) {
+                    throw new Error('Invalid environment');
+                }
+                factVisible = !!(control && await env.isVisible(control.elem, true));
                 res = (expVisible === factVisible);
             }
 
@@ -93,7 +167,7 @@ export class TestComponent {
         return true;
     }
 
-    checkValues(controls) {
+    checkValues(controls, ret = false) {
         let res = true;
 
         for (const countrolName in controls) {
@@ -101,33 +175,53 @@ export class TestComponent {
                 continue;
             }
 
-            if (!(countrolName in this)) {
+            if (!(countrolName in this.content)) {
                 throw new Error(`Control (${countrolName}) not found`);
             }
             const expected = controls[countrolName];
-            const control = this[countrolName];
+            const control = this.content[countrolName];
             const isObj = isObject(control);
 
-            if (isObject(expected) || Array.isArray(expected)) {
-                res = checkObjValue(control, expected, true);
+            if (isObject(expected)) {
+                if (control && isFunction(control.checkValues)) {
+                    res = control.checkValues(expected, true);
+                } else {
+                    res = checkObjValue(control, expected, true);
+                }
                 if (res !== true) {
                     res.key = `${countrolName}.${res.key}`;
                     break;
                 }
+            } else if (Array.isArray(expected)) {
+                for (let ind = 0; ind < expected.length; ind += 1) {
+                    const expectedArrayItem = expected[ind];
+                    const controlArrayItem = control[ind];
+
+                    if (controlArrayItem && isFunction(controlArrayItem.checkValues)) {
+                        res = controlArrayItem.checkValues(expectedArrayItem, true);
+                    } else {
+                        res = checkObjValue(controlArrayItem, expectedArrayItem, true);
+                    }
+
+                    if (res !== true) {
+                        res.key = `${countrolName}[${ind}].${res.key}`;
+                        break;
+                    }
+                }
             } else if (
-                (isObj && control.value !== expected)
+                (isObj && control.content && control.content.value !== expected)
                 || (!isObj && control !== expected)
             ) {
                 res = {
                     key: countrolName,
-                    value: (isObj) ? control.value : control,
+                    value: (isObj) ? control.content.value : control,
                     expected,
                 };
                 break;
             }
         }
 
-        if (res !== true) {
+        if (res !== true && !ret) {
             let msg;
             if ('expected' in res) {
                 msg = `Not expected value "${res.value}" for (${res.key}) "${res.expected}" is expected`;
@@ -146,7 +240,7 @@ export class TestComponent {
             throw new Error('Invalid expected state object');
         }
 
-        await this.checkVisibility(this, stateObj.visibility);
+        await this.checkVisibility(this.content, stateObj.visibility);
         this.checkValues(stateObj.values);
 
         return true;
