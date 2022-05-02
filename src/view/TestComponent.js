@@ -1,8 +1,5 @@
-import {
-    isFunction,
-    isObject,
-    checkObjValue,
-} from '../utils.js';
+import { isFunction, isObject } from '../utils.js';
+import { assert } from '../assert.js';
 import { getEnv } from '../index.js';
 
 export class TestComponent {
@@ -186,7 +183,7 @@ export class TestComponent {
                 if (control && isFunction(control.checkValues)) {
                     res = control.checkValues(expected, true);
                 } else {
-                    res = checkObjValue(control, expected, true);
+                    res = assert.deepMeet(control, expected, true);
                 }
                 if (res !== true) {
                     res.key = `${countrolName}.${res.key}`;
@@ -200,7 +197,7 @@ export class TestComponent {
                     if (controlArrayItem && isFunction(controlArrayItem.checkValues)) {
                         res = controlArrayItem.checkValues(expectedArrayItem, true);
                     } else {
-                        res = checkObjValue(controlArrayItem, expectedArrayItem, true);
+                        res = assert.deepMeet(controlArrayItem, expectedArrayItem, true);
                     }
 
                     if (res !== true) {

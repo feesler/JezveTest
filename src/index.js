@@ -3,6 +3,7 @@ export { TestComponent } from './view/TestComponent.js';
 export { Runner } from './Runner.js';
 export { TestApplication } from './TestApplication.js';
 export * from './utils.js';
+export * from './assert.js';
 
 let testEnv = null;
 
