@@ -42,6 +42,7 @@ export class TestComponent {
     async parse() {
         this.content = await this.parseContent();
         await this.postParse();
+        await this.resolveContentVisibility();
 
         await this.updateModel();
     }
@@ -100,68 +101,24 @@ export class TestComponent {
         await this.parse();
     }
 
-    /**
-     * Compare visibiliy of specified controls with expected mask
-     * In the controls object each value must be an object with 'elem' property containing pointer
-     *  to DOM element
-     * In the expected object each value must be a boolean value
-     * For false expected control may be null or invisible
-     * Both controls and expected object may contain nested objects
-     * Example:
-     *     controls : {
-     *         control_1 : { elem : Element },
-     *         control_2 : { childControl : { elem : Element } }
-     *     }
-     *     expected : {
-     *         control_1 : true,
-     *         control_2 : { childControl : true, invControl : false },
-     *         control_3 : false
-     *     }
-     * @param {Object} controls
-     * @param {Object} expected
-     */
-    async checkVisibility(controls, expected) {
-        let res;
-
-        if (!controls) {
-            throw new Error('Wrong parameters');
-        }
-
-        // Undefined expected value is equivalent to empty object
-        if (typeof expected === 'undefined') {
-            return true;
-        }
-
-        for (const countrolName in expected) {
-            if (!Object.prototype.hasOwnProperty.call(expected, countrolName)) {
+    async resolveContentVisibility() {
+        for (const key in this.content) {
+            if (!Object.prototype.hasOwnProperty.call(this.content, key)) {
                 continue;
             }
 
-            let factVisible;
-            const expVisible = expected[countrolName];
-            const control = controls[countrolName];
-
-            if (isObject(expVisible)) {
-                if (control && isFunction(control.checkVisibility)) {
-                    res = await control.checkVisibility(control.content, expVisible);
-                } else {
-                    res = await this.checkVisibility(control, expVisible);
-                }
-            } else {
-                const env = getEnv();
-                if (!env) {
-                    throw new Error('Invalid environment');
-                }
-                factVisible = !!(control && await env.isVisible(control.elem, true));
-                res = (expVisible === factVisible);
+            const component = this.content[key];
+            if (!isObject(component)) {
+                continue;
             }
 
-            if (!res) {
-                throw new Error(`Not expected visibility(${factVisible}) of "${countrolName}" control`);
+            const visible = await TestComponent.isVisible(component);
+            if (component.content && isFunction(component.checkValues)) {
+                component.content.visible = visible;
+            } else {
+                component.visible = visible;
             }
         }
-
-        return true;
     }
 
     checkValues(controls, ret = false) {
@@ -237,8 +194,7 @@ export class TestComponent {
             throw new Error('Invalid expected state object');
         }
 
-        await this.checkVisibility(this.content, stateObj.visibility);
-        this.checkValues(stateObj.values);
+        this.checkValues(stateObj);
 
         return true;
     }
