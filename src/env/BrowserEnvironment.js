@@ -486,6 +486,133 @@ export class BrowserEnvironment extends Environment {
         });
     }
 
+    async onStart() {
+        try {
+            this.results = {
+                total: 0,
+                ok: 0,
+                fail: 0,
+                expected: 0,
+            };
+
+            if (this.app.config.testsExpected) {
+                this.results.expected = this.app.config.testsExpected;
+            }
+            this.setErrorHandler();
+
+            this.addResult('Test initialization', true);
+
+            await this.runTests();
+        } catch (e) {
+            this.addResult(e);
+        }
+    }
+
+    renderTestView(container) {
+        if (!container) {
+            throw new Error('Invalid container');
+        }
+
+        const startBtn = createElement('button', {
+            props: { className: 'test-btn', type: 'button', textContent: 'Start' },
+            events: { click: () => this.onStart() },
+        });
+
+        const totalTitle = createElement('th', { props: { className: 'title', textContent: 'Total' } });
+        this.totalRes = createElement('th');
+        const okTitle = createElement('th', { props: { className: 'title', textContent: 'Ok' } });
+        this.okRes = createElement('th');
+        const failTitle = createElement('th', { props: { className: 'title', textContent: 'Fail' } });
+        this.failRes = createElement('th');
+        this.durationRes = createElement('th', { props: { className: 'duration' } });
+        const row = createElement('tr', {
+            children: [
+                totalTitle,
+                this.totalRes,
+                okTitle,
+                this.okRes,
+                failTitle,
+                this.failRes,
+                this.durationRes,
+            ],
+        });
+        const counterTable = createElement('table', {
+            props: { className: 'test-tbl counter-tbl' },
+            children: row,
+        });
+
+        this.toggleResBtn = createElement('button', {
+            props: { className: 'test-btn toggle-res-btn', type: 'button', textContent: 'Show' },
+            events: {
+                click: () => {
+                    const clName = 'test-results-expanded';
+                    const isExpanded = this.resultsBlock.classList.contains(clName);
+
+                    this.toggleResBtn.textContent = isExpanded ? 'Show' : 'Hide';
+                    this.resultsBlock.classList.toggle(clName);
+
+                    if (!isExpanded && this.newResultsAvailable) {
+                        this.newResultsAvailable = false;
+                        this.resContainer.scrollTop = this.resContainer.scrollHeight;
+                    }
+                },
+            },
+        });
+
+        const controlsContainer = createElement('div', {
+            props: { className: 'controls' },
+            children: [startBtn, counterTable, this.toggleResBtn],
+        });
+
+        this.fullTestsCheck = createElement('input', {
+            attrs: { type: 'checkbox', checked: true },
+        });
+
+        const checkboxWrapper = createElement('div', {
+            props: { className: 'checkbox-wrap' },
+            children: [
+                createElement('label', {
+                    children: [
+                        this.fullTestsCheck,
+                        createElement('span', { props: { textContent: 'Run full scenario' } }),
+                    ],
+                }),
+            ],
+        });
+
+        // Results table
+        this.restbl = createElement('tbody');
+        this.resContainer = createElement('div', {
+            props: { className: 'test-results-container' },
+            children: createElement('table', { children: this.restbl }),
+        });
+        this.resultsBlock = createElement('div', {
+            props: { className: 'test-results' },
+            children: [
+                controlsContainer,
+                checkboxWrapper,
+                this.resContainer,
+            ],
+        });
+
+        // Tests view iframe
+        this.viewframe = createElement('iframe', {
+            props: { src: this.baseUrl() },
+        });
+
+        const testsView = createElement('div', {
+            props: { className: 'test-view' },
+            children: this.viewframe,
+        });
+
+        const contentElem = createElement('div', {
+            props: { className: 'test-content' },
+            children: [this.resultsBlock, testsView],
+        });
+
+        container.append(contentElem);
+    }
+
     async init(options) {
         if (!isObject(options)) {
             throw new Error('Invalid options');
@@ -511,63 +638,6 @@ export class BrowserEnvironment extends Environment {
 
         await this.app.init();
 
-        this.startbtn = document.getElementById('startbtn');
-        this.totalRes = document.getElementById('totalRes');
-        this.okRes = document.getElementById('okRes');
-        this.failRes = document.getElementById('failRes');
-        this.durationRes = document.getElementById('durationRes');
-        this.viewframe = document.getElementById('viewframe');
-        this.resContainer = document.querySelector('.results-container');
-        this.toggleResBtn = document.getElementById('toggleresbtn');
-        this.fullTestsCheck = document.getElementById('fulltestscheck');
-        this.restbl = document.getElementById('restbl');
-        if (!this.startbtn
-            || !this.totalRes
-            || !this.okRes
-            || !this.failRes
-            || !this.durationRes
-            || !this.viewframe
-            || !this.resContainer
-            || !this.toggleResBtn
-            || !this.fullTestsCheck
-            || !this.restbl
-        ) {
-            throw new Error('Fail to init tests');
-        }
-
-        this.toggleResBtn.addEventListener('click', () => {
-            const clName = 'results-expanded';
-            const isExpanded = this.resultsBlock.classList.contains(clName);
-
-            this.toggleResBtn.value = isExpanded ? 'Show' : 'Hide';
-            this.resultsBlock.classList.toggle(clName);
-
-            if (!isExpanded && this.newResultsAvailable) {
-                this.newResultsAvailable = false;
-                this.resContainer.scrollTop = this.resContainer.scrollHeight;
-            }
-        });
-
-        this.startbtn.addEventListener('click', async () => {
-            try {
-                this.results = {
-                    total: 0,
-                    ok: 0,
-                    fail: 0,
-                    expected: 0,
-                };
-
-                if (this.app.config.testsExpected) {
-                    this.results.expected = this.app.config.testsExpected;
-                }
-                this.setErrorHandler();
-
-                this.addResult('Test initialization', true);
-
-                await this.runTests();
-            } catch (e) {
-                this.addResult(e);
-            }
-        });
+        this.renderTestView(options.container);
     }
 }

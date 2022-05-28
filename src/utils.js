@@ -95,6 +95,13 @@ export function createElement(tagName, options = {}) {
         setProps(elem, options.props);
     }
 
+    if (options.attrs) {
+        Object.keys(options.attrs).forEach((attribute) => {
+            const value = options.attrs[attribute];
+            elem.setAttribute(attribute, value);
+        });
+    }
+
     if (options.children) {
         const childs = Array.isArray(options.children) ? options.children : [options.children];
         childs.forEach((child) => {
