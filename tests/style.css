@@ -1,0 +1,160 @@
+button,
+input[type="button"],
+input[type="submit"] {
+  -webkit-appearance: button;
+  appearance: button;
+  overflow: visible;
+}
+
+.test-content {
+  height: 100%;
+  display: -ms-flexbox;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: stretch;
+}
+
+/* Button */
+.test-btn {
+  padding: 3px 10px;
+  background-color: #44aaff;
+  color: #ffffff;
+}
+
+.test-btn:disabled {
+  background-color: #708290;
+}
+
+/* Checkbox wrapper */
+.checkbox-wrap {
+  height: 20px;
+  padding: 5px 0;
+}
+
+.checkbox-wrap > input[type="checkbox"] {
+  display: inline;
+  height: 20px;
+  line-height: 20px;
+}
+
+.checkbox-wrap > label {
+  display: inline;
+  padding: 0 5px;
+  font-size: 16px;
+  height: 20px;
+  line-height: 20px;
+}
+
+.checkbox-wrap label > input {
+  margin-right: 8px;
+}
+
+.checkbox-wrap.checkbox-wrap_inline {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+/* Results */
+.test-results {
+  margin: 0 0 10px 0;
+  display: -ms-flexbox;
+  display: flex;
+  flex-flow: column nowrap;
+  max-height: 70vh;
+}
+
+.test-results-container {
+  display: none;
+  overflow-y: auto;
+}
+
+.test-results-expanded .test-results-container {
+  display: block;
+}
+
+.controls {
+  padding: 0 0 10px 0;
+}
+
+.test-tbl.counter-tbl {
+  display: inline;
+  border: 0 none;
+}
+
+.counter-tbl th.title {
+  border-right: 0 none;
+}
+
+.counter-tbl th.title + th {
+  border-left: 0 none;
+}
+
+.counter-tbl .duration {
+  border-top: 0 none;
+  border-right: 0 none;
+  border-bottom: 0 none;
+}
+
+.test-results-container table {
+  border-collapse: collapse;
+}
+
+.test-results-container td {
+  border: 1px solid;
+  padding: 5px;
+}
+
+.res-block-1 {
+  background-color: #005588;
+  color: #ffffff;
+}
+
+.res-block-2 {
+  background-color: #0099bb;
+}
+
+.res-block-3 {
+  background-color: #22ccff;
+}
+
+/* Test view */
+.test-view {
+  display: -ms-flexbox;
+  display: flex;
+  flex-grow: 1;
+  height: 70vh;
+}
+
+.test-view > iframe {
+  width: 100%;
+  height: 100%;
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+  .test-content {
+    flex-flow: row nowrap;
+  }
+
+  /* Results table */
+  .test-results {
+    flex-grow: 0;
+    flex-basis: 35%;
+    margin: 0 10px 0 0;
+  }
+
+  .test-results-container {
+    display: block;
+  }
+
+  .toggle-res-btn {
+    display: none;
+  }
+
+  /* Test iframe */
+  .test-view {
+    flex-grow: 1;
+    flex-basis: 65%;
+    overflow: hidden;
+  }
+}
