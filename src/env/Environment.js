@@ -26,6 +26,7 @@ export class Environment {
             'onChange',
             'onBlur',
             'prop',
+            'attr',
             'waitForSelector',
             'waitForFunction',
             'wait',
