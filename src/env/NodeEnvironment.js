@@ -177,7 +177,7 @@ export class NodeEnvironment extends Environment {
     /* eslint-enable no-param-reassign, no-await-in-loop */
 
     async click(elem) {
-        return elem.click();
+        return elem.evaluate((el) => el.click());
     }
 
     /* eslint-disable no-param-reassign */
