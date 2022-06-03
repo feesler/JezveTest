@@ -95,6 +95,14 @@ export class NodeEnvironment extends Environment {
         }, prop);
     }
 
+    async attr(elem, attribute) {
+        if (!elem || typeof attribute !== 'string') {
+            return null;
+        }
+
+        return elem.evaluate((el, a) => el.getAttribute(a), attribute);
+    }
+
     async waitForSelector(selector, options) {
         return this.page.waitForSelector(selector, options);
     }
