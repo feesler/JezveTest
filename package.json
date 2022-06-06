@@ -1,13 +1,12 @@
 {
   "name": "jezve-test",
-  "version": "0.16.4",
+  "version": "0.16.6",
   "description": "Testing utility written from scratch",
   "main": "dist/index.js",
   "type": "module",
   "jsnext:main": "src/index.js",
   "module": "src/index.js",
   "files": [
-    "dist",
     "src"
   ],
   "scripts": {

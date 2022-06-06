@@ -39,6 +39,11 @@ export function isInt(x) {
     return x === y && x.toString() === y.toString();
 }
 
+/** Check bit flag is set */
+/* eslint-disable no-bitwise */
+export const hasFlag = (x, flag) => ((x & flag) === flag);
+/* eslint-enable no-bitwise */
+
 /* eslint-disable no-param-reassign */
 /**
  * Assign properties from second object to first
