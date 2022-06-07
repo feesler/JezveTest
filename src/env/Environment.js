@@ -22,7 +22,7 @@ export class Environment {
             'closest',
             'hasClass',
             'isVisible',
-            'selectByValue',
+            'select',
             'onChange',
             'onBlur',
             'prop',

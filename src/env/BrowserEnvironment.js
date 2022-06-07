@@ -162,7 +162,7 @@ export class BrowserEnvironment extends Environment {
     }
 
     /* eslint-disable no-param-reassign */
-    async selectByValue(elem, value, bool = true) {
+    async select(elem, value, bool = true) {
         if (!elem || !elem.options) {
             throw new Error('Invalid select element');
         }
@@ -172,6 +172,7 @@ export class BrowserEnvironment extends Environment {
 
         const selValue = value.toString();
         const selBool = !!bool;
+        let found = false;
         for (let i = 0, l = elem.options.length; i < l; i += 1) {
             const option = elem.options[i];
             if (option && option.value === selValue) {
@@ -180,14 +181,20 @@ export class BrowserEnvironment extends Environment {
                 } else {
                     elem.selectedIndex = i;
                 }
-                return;
+                found = true;
+                break;
             }
         }
 
-        throw new Error('Value not found');
+        if (!found) {
+            throw new Error('Value not found');
+        }
+
+        return this.onChange(elem);
     }
     /* eslint-enable no-param-reassign */
 
+    /** Trigger 'onchange' event */
     async onChange(elem) {
         if ('createEvent' in this.vdoc) {
             const evt = this.vdoc.createEvent('HTMLEvents');
