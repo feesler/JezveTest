@@ -140,7 +140,7 @@ export class NodeEnvironment extends Environment {
 
     /** Select item with specified value if exist */
     /* eslint-disable no-param-reassign, no-await-in-loop */
-    async selectByValue(elem, value, bool = true) {
+    async select(elem, value, bool = true) {
         if (!elem) {
             throw new Error('Invalid select element');
         }
@@ -173,8 +173,23 @@ export class NodeEnvironment extends Environment {
         if (!res) {
             throw new Error('Value not found');
         }
+
+        return this.onChange(elem);
     }
     /* eslint-enable no-param-reassign, no-await-in-loop */
+
+    /** Trigger 'onchange' event */
+    async onChange(elem) {
+        return elem.evaluate((el) => {
+            if ('createEvent' in document) {
+                const evt = document.createEvent('HTMLEvents');
+                evt.initEvent('change', true, false);
+                el.dispatchEvent(evt);
+            } else {
+                el.fireEvent('onchange');
+            }
+        });
+    }
 
     async click(elem) {
         return elem.evaluate((el) => el.click());
@@ -196,18 +211,6 @@ export class NodeEnvironment extends Environment {
         return elem.type(val.toString());
     }
     /* eslint-enable no-param-reassign */
-
-    async onChange(elem) {
-        return elem.evaluate((el) => {
-            if ('createEvent' in document) {
-                const evt = document.createEvent('HTMLEvents');
-                evt.initEvent('change', true, false);
-                el.dispatchEvent(evt);
-            } else {
-                el.fireEvent('onchange');
-            }
-        });
-    }
 
     async onBlur(elem) {
         return elem.evaluate((el) => el.onblur());
