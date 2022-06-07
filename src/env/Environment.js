@@ -23,6 +23,7 @@ export class Environment {
             'hasClass',
             'isVisible',
             'select',
+            'check',
             'onChange',
             'onBlur',
             'prop',
@@ -80,6 +81,12 @@ export class Environment {
     onPageError(error) {
         this.addResult(error);
         throw error;
+    }
+
+    /** Click by checkbox/radio element and trigger 'onchange' event */
+    async check(elem) {
+        await this.click(elem);
+        return this.onChange(elem);
     }
 
     async wait(condition, options) {
