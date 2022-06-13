@@ -13,6 +13,8 @@ const MSG_IS_OBJECT = 'Value is not Object';
 const MSG_IS_FUNCTION = 'Value is not function';
 const MSG_IS_DATE = 'Value is not Date';
 const MSG_IS_STRING = 'Value is not string';
+const MSG_IS_DEFINED = 'Value is undefined';
+const MSG_IS_UNDEFINED = 'Value is not undefined';
 const MSG_IS_NUMBER = 'Value is not number';
 const MSG_IS_INTEGER = 'Value is not integer';
 
@@ -86,6 +88,28 @@ assert.isDate = (obj, message = MSG_IS_DATE) => {
  */
 assert.isString = (obj, message = MSG_IS_STRING) => {
     if (typeof obj !== 'string') {
+        throw new Error(message);
+    }
+};
+
+/**
+ * Throws exception if object is undefined
+ * @param {*} obj - object to check
+ * @param {String|null} message - optional error message
+ */
+assert.isDefined = (obj, message = MSG_IS_DEFINED) => {
+    if (typeof obj === 'undefined') {
+        throw new Error(message);
+    }
+};
+
+/**
+ * Throws exception if object is defined
+ * @param {*} obj - object to check
+ * @param {String|null} message - optional error message
+ */
+assert.isUndefined = (obj, message = MSG_IS_UNDEFINED) => {
+    if (typeof obj !== 'undefined') {
         throw new Error(message);
     }
 };
