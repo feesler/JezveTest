@@ -7,11 +7,12 @@ import {
 } from './utils.js';
 
 const MSG_ASSERT = 'Expression is not true';
-const MSG_IS_ARRAY = 'Object is not array';
-const MSG_IS_FUNCTION = 'Object is not function';
-const MSG_IS_DATE = 'Object is not Date';
-const MSG_IS_NUMBER = 'Object is not number';
-const MSG_IS_INTEGER = 'Object is not integer';
+const MSG_IS_ARRAY = 'Value is not array';
+const MSG_IS_OBJECT = 'Value is not Object';
+const MSG_IS_FUNCTION = 'Value is not function';
+const MSG_IS_DATE = 'Value is not Date';
+const MSG_IS_NUMBER = 'Value is not number';
+const MSG_IS_INTEGER = 'Value is not integer';
 
 /** Throws exception if expression is not thuthy */
 export const assert = (condition, message = MSG_ASSERT) => {
@@ -27,6 +28,17 @@ export const assert = (condition, message = MSG_ASSERT) => {
  */
 assert.isArray = (obj, message = MSG_IS_ARRAY) => {
     if (!Array.isArray(obj)) {
+        throw new Error(message);
+    }
+};
+
+/**
+ * Throws exception if object is not object
+ * @param {Array} obj - object to check
+ * @param {String|null} message - optional error message
+ */
+assert.isObject = (obj, message = MSG_IS_OBJECT) => {
+    if (!isObject(obj)) {
         throw new Error(message);
     }
 };
