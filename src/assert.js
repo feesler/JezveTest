@@ -7,10 +7,12 @@ import {
 } from './utils.js';
 
 const MSG_ASSERT = 'Expression is not true';
+const MSG_INSTANCEOF = 'Value is not instance of expected class';
 const MSG_IS_ARRAY = 'Value is not array';
 const MSG_IS_OBJECT = 'Value is not Object';
 const MSG_IS_FUNCTION = 'Value is not function';
 const MSG_IS_DATE = 'Value is not Date';
+const MSG_IS_STRING = 'Value is not string';
 const MSG_IS_NUMBER = 'Value is not number';
 const MSG_IS_INTEGER = 'Value is not integer';
 
@@ -22,8 +24,20 @@ export const assert = (condition, message = MSG_ASSERT) => {
 };
 
 /**
+ * Throws exception if object is not instance of specified class
+ * @param {Object} obj - object to check
+ * @param {Constructor } constructor - expected class
+ * @param {String|null} message - optional error message
+ */
+assert.instanceOf = (obj, constructor, message = MSG_INSTANCEOF) => {
+    if (!(obj instanceof constructor)) {
+        throw new Error(message);
+    }
+};
+
+/**
  * Throws exception if object is not array
- * @param {Array} obj - object to check
+ * @param {*} obj - object to check
  * @param {String|null} message - optional error message
  */
 assert.isArray = (obj, message = MSG_IS_ARRAY) => {
@@ -34,7 +48,7 @@ assert.isArray = (obj, message = MSG_IS_ARRAY) => {
 
 /**
  * Throws exception if object is not object
- * @param {Array} obj - object to check
+ * @param {*} obj - object to check
  * @param {String|null} message - optional error message
  */
 assert.isObject = (obj, message = MSG_IS_OBJECT) => {
@@ -45,7 +59,7 @@ assert.isObject = (obj, message = MSG_IS_OBJECT) => {
 
 /**
  * Throws exception if object is not function
- * @param {Array} obj - object to check
+ * @param {*} obj - object to check
  * @param {String|null} message - optional error message
  */
 assert.isFunction = (obj, message = MSG_IS_FUNCTION) => {
@@ -56,7 +70,7 @@ assert.isFunction = (obj, message = MSG_IS_FUNCTION) => {
 
 /**
  * Throws exception if object is not Date
- * @param {Array} obj - object to check
+ * @param {*} obj - object to check
  * @param {String|null} message - optional error message
  */
 assert.isDate = (obj, message = MSG_IS_DATE) => {
@@ -66,8 +80,19 @@ assert.isDate = (obj, message = MSG_IS_DATE) => {
 };
 
 /**
+ * Throws exception if object is not string
+ * @param {*} obj - object to check
+ * @param {String|null} message - optional error message
+ */
+assert.isString = (obj, message = MSG_IS_STRING) => {
+    if (typeof obj !== 'string') {
+        throw new Error(message);
+    }
+};
+
+/**
  * Throws exception if object is not number
- * @param {Array} obj - object to check
+ * @param {*} obj - object to check
  * @param {String|null} message - optional error message
  */
 assert.isNumber = (obj, message = MSG_IS_NUMBER) => {
@@ -78,7 +103,7 @@ assert.isNumber = (obj, message = MSG_IS_NUMBER) => {
 
 /**
  * Throws exception if object is not integer number
- * @param {Array} obj - object to check
+ * @param {*} obj - object to check
  * @param {String|null} message - optional error message
  */
 assert.isInteger = (obj, message = MSG_IS_INTEGER) => {
