@@ -150,7 +150,7 @@ assert.deepMeet = (obj, expectedObj, ret = false) => {
         expected = expectedObj[vKey];
         value = obj[vKey];
         if (isObject(expected) || Array.isArray(expected)) {
-            res = this.deepMeet(value, expected, true);
+            res = assert.deepMeet(value, expected, true);
             if (res !== true) {
                 res.key = `${vKey}.${res.key}`;
                 break;
