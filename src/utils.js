@@ -21,6 +21,10 @@ export function isObject(o) {
 /** Check is specified string is number */
 export function isNum(val) {
     const fval = parseFloat(val);
+    if (Number.isNaN(fval)) {
+        return false;
+    }
+
     if (fval === 0) {
         return true;
     }
