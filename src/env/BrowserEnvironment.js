@@ -209,12 +209,8 @@ export class BrowserEnvironment extends Environment {
         return elem.onblur();
     }
 
-    /* eslint-disable no-param-reassign */
-    async input(elem, val) {
-        if (elem.value === '' && val === '') {
-            return;
-        }
-
+    dispatchInputEvent(elem, val) {
+        /* eslint-disable no-param-reassign */
         elem.value = val;
 
         let event;
@@ -230,7 +226,24 @@ export class BrowserEnvironment extends Environment {
 
         elem.dispatchEvent(event);
     }
-    /* eslint-enable no-param-reassign */
+
+    async input(elem, val) {
+        if (elem.value === '' && val === '') {
+            return;
+        }
+
+        if (val === '') {
+            this.dispatchInputEvent(elem, val);
+            return;
+        }
+
+        const chars = val.split('');
+        let inputValue = '';
+        for (const char of chars) {
+            inputValue += char;
+            this.dispatchInputEvent(elem, inputValue);
+        }
+    }
 
     async click(elem) {
         if (!elem) {
