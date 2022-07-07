@@ -1,7 +1,7 @@
 import process from 'process';
 import http from 'http';
 import https from 'https';
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer/lib/cjs/puppeteer/puppeteer.js';
 import chalk from 'chalk';
 import {
     formatTime,
