@@ -18,12 +18,7 @@ export class NodeEnvironment extends Environment {
         this.page = null;
         this.base = null;
         this.reqCookies = {};
-        this.results = {
-            total: 0,
-            ok: 0,
-            fail: 0,
-            expected: 0,
-        };
+        this.resetResults();
     }
 
     baseUrl() {
@@ -468,6 +463,25 @@ export class NodeEnvironment extends Environment {
         await this.navigation(() => this.page.goto(url));
     }
 
+    async getBrowserRevision(revision) {
+        const browserFetcher = puppeteer.createBrowserFetcher();
+        const localRev = browserFetcher.revisionInfo(revision);
+        if (localRev) {
+            return localRev;
+        }
+
+        if (!browserFetcher.canDownload(revision)) {
+            throw new Error(`Can't download Chromium revision ${revision}`);
+        }
+
+        const rev = await browserFetcher.download(revision);
+        if (!rev) {
+            throw new Error(`Error during downloading Chromium revision ${revision}`);
+        }
+
+        return rev;
+    }
+
     async init(options) {
         let res = 1;
         let browser;
@@ -494,12 +508,7 @@ export class NodeEnvironment extends Environment {
             }
             this.base = this.app.config.nodeURL;
 
-            this.results = {
-                total: 0,
-                ok: 0,
-                fail: 0,
-                expected: 0,
-            };
+            this.resetResults();
 
             if (this.app.config.testsExpected) {
                 this.results.expected = this.app.config.testsExpected;
@@ -507,13 +516,20 @@ export class NodeEnvironment extends Environment {
 
             await this.app.init();
 
-            browser = await puppeteer.launch({
+            const launchOptions = {
                 headless: true,
                 args: [
                     '--proxy-server="direct://"',
                     '--proxy-bypass-list=*',
                 ],
-            });
+            };
+
+            if (this.app.config.browserRevision) {
+                const revisionInfo = await this.getBrowserRevision(this.app.config.browserRevision);
+                launchOptions.executablePath = revisionInfo.executablePath;
+            }
+
+            browser = await puppeteer.launch(launchOptions);
             const allPages = await browser.pages();
             this.page = (allPages.length) ? allPages[0] : await browser.newPage();
             this.setErrorHandler();

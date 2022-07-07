@@ -8,59 +8,15 @@ export class Environment {
         this.routeHandler = null;
         this.startTime = 0;
         this.errorHandler = this.onPageError.bind(this);
-
-        this.interface = [
-            'baseUrl',
-            'url',
-            'navigation',
-            'isFullScenario',
-            'setErrorHandler',
-            'goTo',
-            'parentNode',
-            'query',
-            'queryAll',
-            'closest',
-            'hasClass',
-            'isVisible',
-            'select',
-            'check',
-            'onChange',
-            'onBlur',
-            'prop',
-            'attr',
-            'waitForSelector',
-            'waitForFunction',
-            'wait',
-            'timeout',
-            'global',
-            'click',
-            'input',
-            'httpReq',
-            'addResult',
-            'setBlock',
-            'setDuration',
-            'getContent',
-        ];
     }
 
-    inject(target) {
-        if (!this.app) {
-            throw new Error('Environment is not initialized');
-        }
-
-        this.interface.forEach((method) => {
-            if (!isFunction(this[method])) {
-                throw new Error(`Method ${method} not implemented`);
-            }
-
-            if (!(method in target)) {
-                Object.defineProperty(target, method, {
-                    value: this[method].bind(this),
-                    writable: false,
-                    enumerable: false,
-                });
-            }
-        });
+    resetResults() {
+        this.results = {
+            total: 0,
+            ok: 0,
+            fail: 0,
+            expected: 0,
+        };
     }
 
     async onNavigate() {

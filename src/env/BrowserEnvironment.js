@@ -516,12 +516,7 @@ export class BrowserEnvironment extends Environment {
 
     async onStart() {
         try {
-            this.results = {
-                total: 0,
-                ok: 0,
-                fail: 0,
-                expected: 0,
-            };
+            this.resetResults();
 
             if (this.app.config.testsExpected) {
                 this.results.expected = this.app.config.testsExpected;
