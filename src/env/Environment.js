@@ -63,6 +63,15 @@ export class Environment {
         });
     }
 
+    resetResults() {
+        this.results = {
+            total: 0,
+            ok: 0,
+            fail: 0,
+            expected: 0,
+        };
+    }
+
     async onNavigate() {
         if (isFunction(this.validateContent)) {
             const content = await this.getContent();
