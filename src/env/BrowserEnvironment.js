@@ -8,7 +8,7 @@ import {
 } from '../utils.js';
 import { Environment } from './Environment.js';
 
-export class BrowserEnvironment extends Environment {
+export default class BrowserEnvironment extends Environment {
     constructor() {
         super();
 
