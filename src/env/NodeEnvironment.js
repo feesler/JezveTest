@@ -11,7 +11,7 @@ import {
 } from '../utils.js';
 import { Environment } from './Environment.js';
 
-export class NodeEnvironment extends Environment {
+export default class NodeEnvironment extends Environment {
     constructor(...args) {
         super(...args);
 
