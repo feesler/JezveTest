@@ -160,56 +160,68 @@ assert.arrayIndex = (arr, ind, message = null) => {
  * @param {boolean} ret - return or throw
  */
 assert.deepMeet = (obj, expectedObj, ret = false) => {
-    let res = true;
-
     // undefined means no care
     if (typeof expectedObj === 'undefined') {
         return true;
     }
 
-    if (!isObject(expectedObj) && !Array.isArray(expectedObj)) {
+    let res = true;
+    const failResult = {
+        key: '',
+        value: obj,
+        expected: expectedObj,
+    };
+
+    // undefined object is invalid
+    if (typeof obj === 'undefined') {
+        return failResult;
+    }
+
+    if (
+        (!isObject(obj) && !Array.isArray(obj))
+        || (!isObject(expectedObj) && !Array.isArray(expectedObj))
+    ) {
+        // Check for NaN value
+        if (Number.isNaN(expectedObj)) {
+            if (Number.isNaN(obj)) {
+                return true;
+            }
+            if (ret) {
+                return failResult;
+            }
+            throw new Error(`Not expected value "${obj}", "${expectedObj}" is expected`);
+        }
+
+        // Other primitive types
         if (obj === expectedObj) {
             return true;
         }
-
         if (ret) {
-            return {
-                key: '',
-                value: obj,
-                expected: expectedObj,
-            };
+            return failResult;
         }
-
         throw new Error(`Not expected value "${obj}", "${expectedObj}" is expected`);
     }
 
+    // Check is same object
     if (obj === expectedObj) {
         return true;
     }
 
-    let value;
-    let expected;
-    const expectedKeys = Object.getOwnPropertyNames(expectedObj);
-    for (const vKey of expectedKeys) {
-        if (obj === null || !(vKey in obj)) {
+    for (const vKey in expectedObj) {
+        if (Object.prototype.hasOwnProperty.call(expectedObj, vKey)) {
+            continue;
+        }
+
+        if (!(vKey in obj)) {
             res = { key: vKey };
             break;
         }
 
-        expected = expectedObj[vKey];
-        value = obj[vKey];
-        if (isObject(expected) || Array.isArray(expected)) {
-            res = assert.deepMeet(value, expected, true);
-            if (res !== true) {
-                res.key = `${vKey}.${res.key}`;
-                break;
-            }
-        } else if (value !== expected) {
-            res = {
-                key: vKey,
-                value,
-                expected,
-            };
+        const expected = expectedObj[vKey];
+        const value = obj[vKey];
+        res = assert.deepMeet(value, expected, true);
+        if (res !== true) {
+            res.key = `${vKey}.${res.key}`;
             break;
         }
     }
