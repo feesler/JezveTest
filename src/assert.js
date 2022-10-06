@@ -148,7 +148,85 @@ assert.arrayIndex = (arr, ind, message = null) => {
     }
 
     if (Number.isNaN(ind) || ind < 0 || ind >= arr.length) {
-        const msg = (message === null) ? `Invalid index: ${ind}` : message;
+        const msg = message ?? `Invalid index: ${ind}`;
+        throw new Error(msg);
+    }
+};
+
+/**
+ * Check specified value is strictly equal to expected value
+ * @param {*} value
+ * @param {*} expected
+ * @param {String|null} message
+ */
+assert.equal = (value, expected, message = null) => {
+    if (value !== expected) {
+        const msg = message ?? `Invalid value: "${value}", "${expected}" is expected`;
+        throw new Error(msg);
+    }
+};
+
+/**
+ * Check specified value is not equal to expected value
+ * @param {*} value
+ * @param {*} expected
+ * @param {String|null} message
+ */
+assert.notEqual = (value, expected, message = null) => {
+    if (value === expected) {
+        const msg = message ?? `"${value}" and "${expected}" is equal`;
+        throw new Error(msg);
+    }
+};
+
+/**
+ * Check specified value is less than expected value
+ * @param {*} value
+ * @param {*} expected
+ * @param {String|null} message
+ */
+assert.less = (value, expected, message = null) => {
+    if (!(value < expected)) {
+        const msg = message ?? `"${value}" is not less than "${expected}"`;
+        throw new Error(msg);
+    }
+};
+
+/**
+ * Check specified value is less than or equal to expected value
+ * @param {*} value
+ * @param {*} expected
+ * @param {String|null} message
+ */
+assert.lessOrEqual = (value, expected, message = null) => {
+    if (!(value <= expected)) {
+        const msg = message ?? `"${value}" is not less than or equal to "${expected}"`;
+        throw new Error(msg);
+    }
+};
+
+/**
+ * Check specified value is greater than expected value
+ * @param {*} value
+ * @param {*} expected
+ * @param {String|null} message
+ */
+assert.greater = (value, expected, message = null) => {
+    if (!(value > expected)) {
+        const msg = message ?? `"${value}" is not greater than "${expected}"`;
+        throw new Error(msg);
+    }
+};
+
+/**
+ * Check specified value is greater than expected value
+ * @param {*} value
+ * @param {*} expected
+ * @param {String|null} message
+ */
+assert.greaterOrEqual = (value, expected, message = null) => {
+    if (!(value >= expected)) {
+        const msg = message ?? `"${value}" is not greater than or equal to "${expected}"`;
         throw new Error(msg);
     }
 };
