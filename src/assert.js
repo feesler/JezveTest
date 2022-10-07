@@ -160,7 +160,11 @@ assert.arrayIndex = (arr, ind, message = null) => {
  * @param {String|null} message
  */
 assert.equal = (value, expected, message = null) => {
-    if (value !== expected) {
+    const res = Number.isNaN(expected)
+        ? Number.isNaN(value)
+        : (value === expected);
+
+    if (!res) {
         const msg = message ?? `Invalid value: "${value}", "${expected}" is expected`;
         throw new Error(msg);
     }
@@ -173,7 +177,11 @@ assert.equal = (value, expected, message = null) => {
  * @param {String|null} message
  */
 assert.notEqual = (value, expected, message = null) => {
-    if (value === expected) {
+    const res = Number.isNaN(expected)
+        ? !Number.isNaN(value)
+        : (value !== expected);
+
+    if (!res) {
         const msg = message ?? `"${value}" and "${expected}" is equal`;
         throw new Error(msg);
     }
