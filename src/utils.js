@@ -270,3 +270,16 @@ export const copyObject = (item) => {
 export const onReady = (handler) => {
     document.addEventListener('DOMContentLoaded', handler, false);
 };
+
+/** Maps array using async callback function */
+export const asyncMap = async (data, func) => {
+    if (!Array.isArray(data)) {
+        throw new Error('Invalid data type');
+    }
+    if (!isFunction(func)) {
+        throw new Error('Invalid function type');
+    }
+
+    const tasks = data.map(func);
+    return Promise.all(tasks);
+};
