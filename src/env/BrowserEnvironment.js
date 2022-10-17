@@ -22,7 +22,7 @@ export default class BrowserEnvironment extends Environment {
         this.failRes = null;
         this.durationRes = null;
         this.base = null;
-        this.fullTestsCheck = null;
+        this.storySelect = null;
     }
 
     baseUrl() {
@@ -33,8 +33,9 @@ export default class BrowserEnvironment extends Environment {
         return this.viewframe.contentWindow.location.href;
     }
 
-    isFullScenario() {
-        return this.fullTestsCheck.checked;
+    getSelectedStory() {
+        const { value } = this.storySelect;
+        return (value.length === 0) ? null : value;
     }
 
     async parentNode(elem) {
@@ -504,19 +505,23 @@ export default class BrowserEnvironment extends Environment {
             children: [startBtn, counterTable, this.toggleResBtn],
         });
 
-        this.fullTestsCheck = createElement('input', {
-            attrs: { type: 'checkbox', checked: true },
+        const stories = this.app.scenario.getStorieNames();
+        this.storySelect = createElement('select', {
+            children: ['', ...stories].map((story) => (
+                createElement('option', {
+                    props: {
+                        value: story,
+                        textContent: (story.length === 0) ? 'Full scenario' : story,
+                    },
+                })
+            )),
         });
 
-        const checkboxWrapper = createElement('div', {
-            props: { className: 'checkbox-wrap' },
+        const storyField = createElement('div', {
+            props: { className: 'story-field' },
             children: [
-                createElement('label', {
-                    children: [
-                        this.fullTestsCheck,
-                        createElement('span', { props: { textContent: 'Run full scenario' } }),
-                    ],
-                }),
+                createElement('label', { props: { textContent: 'Run:' } }),
+                this.storySelect,
             ],
         });
 
@@ -530,7 +535,7 @@ export default class BrowserEnvironment extends Environment {
             props: { className: 'test-results' },
             children: [
                 controlsContainer,
-                checkboxWrapper,
+                storyField,
                 this.resContainer,
             ],
         });
