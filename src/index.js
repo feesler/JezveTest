@@ -2,6 +2,7 @@ export { TestView } from './view/TestView.js';
 export { TestComponent } from './view/TestComponent.js';
 export { Runner } from './Runner.js';
 export { TestApplication } from './TestApplication.js';
+export { TestStory } from './TestStory.js';
 export * from './utils.js';
 export * from './assert.js';
 
@@ -40,7 +41,7 @@ export const baseUrl = () => testEnv.baseUrl();
 
 export const url = () => testEnv.url();
 
-export const isFullScenario = () => testEnv.isFullScenario();
+export const getSelectedStory = () => testEnv.getSelectedStory();
 
 export const navigation = (action) => testEnv.navigation(action);
 

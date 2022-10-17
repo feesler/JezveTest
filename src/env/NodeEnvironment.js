@@ -29,8 +29,12 @@ export default class NodeEnvironment extends Environment {
         return this.page.url();
     }
 
-    isFullScenario() {
-        return process.argv.every((arg) => arg !== '-p');
+    getSelectedStory() {
+        if (process.argv.length < 3) {
+            return null;
+        }
+
+        return process.argv[2];
     }
 
     async parentNode(elem) {
