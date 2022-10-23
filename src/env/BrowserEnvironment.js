@@ -98,6 +98,14 @@ export default class BrowserEnvironment extends Environment {
         return elem.getAttribute(attribute);
     }
 
+    async hasAttr(elem, attribute) {
+        if (!elem || typeof attribute !== 'string') {
+            return false;
+        }
+
+        return elem.hasAttribute(attribute);
+    }
+
     // Wait for specified selector on page or return by timeout
     async waitForSelector(selector, options = {}) {
         const {
