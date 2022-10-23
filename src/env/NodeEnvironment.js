@@ -102,6 +102,14 @@ export default class NodeEnvironment extends Environment {
         return elem.evaluate((el, a) => el.getAttribute(a), attribute);
     }
 
+    async hasAttr(elem, attribute) {
+        if (!elem || typeof attribute !== 'string') {
+            return false;
+        }
+
+        return elem.evaluate((el, a) => el.hasAttribute(a), attribute);
+    }
+
     async waitForSelector(selector, options) {
         return this.page.waitForSelector(selector, options);
     }

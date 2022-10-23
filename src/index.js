@@ -73,6 +73,8 @@ export const prop = (elem, property) => testEnv.prop(elem, property);
 
 export const attr = (elem, attribute) => testEnv.attr(elem, attribute);
 
+export const hasAttr = (elem, attribute) => testEnv.hasAttr(elem, attribute);
+
 export const waitForSelector = (selector, options) => (
     testEnv.waitForSelector(selector, options)
 );

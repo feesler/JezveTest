@@ -3,6 +3,30 @@ import { assert } from '../assert.js';
 import { getEnv } from '../index.js';
 
 export class TestComponent {
+    static async create(...args) {
+        if (args.length < 2 || !args[1]) {
+            return null;
+        }
+
+        const instance = new this(...args);
+        await instance.parse();
+
+        return instance;
+    }
+
+    static async isVisible(item) {
+        if (!item || !item.elem) {
+            return false;
+        }
+
+        const env = getEnv();
+        if (!env) {
+            throw new Error('Invalid environment');
+        }
+
+        return env.isVisible(item.elem, true);
+    }
+
     constructor(...args) {
         this.model = {};
 
@@ -49,30 +73,6 @@ export class TestComponent {
 
     /* eslint-disable-next-line no-empty-function */
     async postParse() {
-    }
-
-    static async create(...args) {
-        if (args.length < 2 || !args[1]) {
-            return null;
-        }
-
-        const instance = new this(...args);
-        await instance.parse();
-
-        return instance;
-    }
-
-    static async isVisible(item) {
-        if (!item || !item.elem) {
-            return false;
-        }
-
-        const env = getEnv();
-        if (!env) {
-            throw new Error('Invalid environment');
-        }
-
-        return env.isVisible(item.elem, true);
     }
 
     isActionAvailable(action) {
