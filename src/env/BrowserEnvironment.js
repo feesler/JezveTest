@@ -8,7 +8,7 @@ import {
 } from '../utils.js';
 import { Environment } from './Environment.js';
 
-export default class BrowserEnvironment extends Environment {
+class BrowserEnvironment extends Environment {
     constructor() {
         super();
 
@@ -594,3 +594,5 @@ export default class BrowserEnvironment extends Environment {
         this.renderTestView(options.container);
     }
 }
+
+export const environment = BrowserEnvironment.create();

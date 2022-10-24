@@ -1,3 +1,5 @@
+import { Environment } from './env/Environment.js';
+
 export { TestView } from './view/TestView.js';
 export { TestComponent } from './view/TestComponent.js';
 export { Runner } from './Runner.js';
@@ -6,19 +8,7 @@ export { TestStory } from './TestStory.js';
 export * from './utils.js';
 export * from './assert.js';
 
-let testEnv = null;
-
-export function setupTest(env) {
-    if (!env) {
-        throw new Error('Invalid environment specified');
-    }
-
-    testEnv = env;
-}
-
-export function getEnv() {
-    return testEnv;
-}
+const env = Environment.instance;
 
 /**
  * Run action and add result to the list
@@ -29,7 +19,7 @@ export async function test(descr, action) {
     try {
         const res = await action();
 
-        testEnv.addResult(descr, res);
+        env.addResult(descr, res);
     } catch (e) {
         const extError = (e instanceof Error) ? e : new Error(e);
         extError.descr = descr;
@@ -37,70 +27,70 @@ export async function test(descr, action) {
     }
 }
 
-export const baseUrl = () => testEnv.baseUrl();
+export const baseUrl = () => env.baseUrl();
 
-export const url = () => testEnv.url();
+export const url = () => env.url();
 
-export const getSelectedStory = () => testEnv.getSelectedStory();
+export const getSelectedStory = () => env.getSelectedStory();
 
-export const navigation = (action) => testEnv.navigation(action);
+export const navigation = (action) => env.navigation(action);
 
-export const setErrorHandler = () => testEnv.setErrorHandler();
+export const setErrorHandler = () => env.setErrorHandler();
 
-export const goTo = (link) => testEnv.goTo(link);
+export const goTo = (link) => env.goTo(link);
 
-export const parentNode = (elem) => testEnv.parentNode(elem);
+export const parentNode = (elem) => env.parentNode(elem);
 
-export const query = (...args) => testEnv.query(...args);
+export const query = (...args) => env.query(...args);
 
-export const queryAll = (...args) => testEnv.queryAll(...args);
+export const queryAll = (...args) => env.queryAll(...args);
 
-export const closest = (elem, selector) => testEnv.closest(elem, selector);
+export const closest = (elem, selector) => env.closest(elem, selector);
 
-export const hasClass = (elem, className) => testEnv.hasClass(elem, className);
+export const hasClass = (elem, className) => env.hasClass(elem, className);
 
-export const isVisible = (elem, recursive) => testEnv.isVisible(elem, recursive);
+export const isVisible = (elem, recursive) => env.isVisible(elem, recursive);
 
-export const select = (elem, value, bool) => testEnv.select(elem, value, bool);
+export const select = (elem, value, bool) => env.select(elem, value, bool);
 
-export const check = (elem) => testEnv.check(elem);
+export const check = (elem) => env.check(elem);
 
-export const onChange = (elem) => testEnv.onChange(elem);
+export const onChange = (elem) => env.onChange(elem);
 
-export const onBlur = (elem) => testEnv.onBlur(elem);
+export const onBlur = (elem) => env.onBlur(elem);
 
-export const prop = (elem, property) => testEnv.prop(elem, property);
+export const prop = (elem, property) => env.prop(elem, property);
 
-export const attr = (elem, attribute) => testEnv.attr(elem, attribute);
+export const attr = (elem, attribute) => env.attr(elem, attribute);
 
-export const hasAttr = (elem, attribute) => testEnv.hasAttr(elem, attribute);
+export const hasAttr = (elem, attribute) => env.hasAttr(elem, attribute);
 
 export const waitForSelector = (selector, options) => (
-    testEnv.waitForSelector(selector, options)
+    env.waitForSelector(selector, options)
 );
 
 export const waitForFunction = (condition, options) => (
-    testEnv.waitForFunction(condition, options)
+    env.waitForFunction(condition, options)
 );
 
-export const wait = (condition, options) => testEnv.wait(condition, options);
+export const wait = (condition, options) => env.wait(condition, options);
 
-export const timeout = (ms) => testEnv.timeout(ms);
+export const timeout = (ms) => env.timeout(ms);
 
-export const global = (property) => testEnv.global(property);
+export const global = (property) => env.global(property);
 
-export const click = (elem) => testEnv.click(elem);
+export const click = (elem) => env.click(elem);
 
-export const input = (elem, val) => testEnv.input(elem, val);
+export const input = (elem, val) => env.input(elem, val);
 
 export const httpReq = (method, link, data, headers) => (
-    testEnv.httpReq(method, link, data, headers)
+    env.httpReq(method, link, data, headers)
 );
 
-export const addResult = (descr, res) => testEnv.addResult(descr, res);
+export const addResult = (descr, res) => env.addResult(descr, res);
 
-export const setBlock = (title, category) => testEnv.setBlock(title, category);
+export const setBlock = (title, category) => env.setBlock(title, category);
 
-export const setDuration = (duration) => testEnv.setDuration(duration);
+export const setDuration = (duration) => env.setDuration(duration);
 
-export const getContent = () => testEnv.getContent();
+export const getContent = () => env.getContent();

@@ -1,13 +1,8 @@
 import { BrowserEnvironment } from '../src/env/BrowserEnvironment.js';
-import { setupTest, TestApplication, onReady } from '../src/index.js';
+import { TestApplication, onReady } from '../src/index.js';
 
 class Application extends TestApplication {
-    constructor() {
-        super();
-    }
-
     async init() {
-        setupTest(this.environment);
     }
 
     async startTests() {
@@ -23,9 +18,8 @@ onReady(() => {
 
         const options = {
             app: App,
-            validateContent: (content) => (true),
-            routeHandler: (env, url) => {
-            },
+            validateContent: () => (true),
+            routeHandler: () => {},
             appPath: '/',
             container: document.getElementById('testscontainer'),
         };
