@@ -1,6 +1,13 @@
 import { isFunction } from '../utils.js';
 
 export class Environment {
+    static instance = null;
+
+    static create() {
+        Environment.instance = new this();
+        return Environment.instance;
+    }
+
     constructor() {
         this.app = null;
         this.results = null;

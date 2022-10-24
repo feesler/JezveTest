@@ -1,6 +1,6 @@
 import { isFunction, isObject } from '../utils.js';
 import { assert } from '../assert.js';
-import { getEnv } from '../index.js';
+import { isVisible } from '../index.js';
 
 export class TestComponent {
     static async create(...args) {
@@ -19,12 +19,7 @@ export class TestComponent {
             return false;
         }
 
-        const env = getEnv();
-        if (!env) {
-            throw new Error('Invalid environment');
-        }
-
-        return env.isVisible(item.elem, true);
+        return isVisible(item.elem, true);
     }
 
     constructor(...args) {
