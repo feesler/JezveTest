@@ -367,6 +367,7 @@ class BrowserEnvironment extends Environment {
         }
 
         if (result.err) {
+            /* eslint-disable-next-line no-console */
             console.error(result.err);
         }
     }

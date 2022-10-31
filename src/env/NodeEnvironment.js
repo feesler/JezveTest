@@ -387,6 +387,7 @@ class NodeEnvironment extends Environment {
         return res;
     }
 
+    /* eslint-disable no-console */
     addResult(descr, res) {
         const result = {
             descr,
@@ -441,6 +442,7 @@ class NodeEnvironment extends Environment {
     setDuration(duration) {
         console.log(`Duration of tests: ${formatTime(duration)}`);
     }
+    /* eslint-enable no-console */
 
     async getContent() {
         return this.page.content();
@@ -558,6 +560,7 @@ class NodeEnvironment extends Environment {
             await browser.close();
         }
 
+        /* eslint-disable-next-line no-console */
         console.log(`Total: ${this.results.total} Passed: ${this.results.ok} Failed: ${this.results.fail}`);
 
         process.exit(res);
