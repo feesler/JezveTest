@@ -434,6 +434,8 @@ class NodeEnvironment extends Environment {
             coloredTitle = chalk.black.bgGreen(fmtTitle);
         } else if (category === 3) {
             coloredTitle = chalk.cyan(fmtTitle);
+        } else if (category === 'warn') {
+            coloredTitle = chalk.red(fmtTitle);
         }
 
         console.log(coloredTitle);
