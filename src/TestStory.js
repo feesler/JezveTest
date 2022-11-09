@@ -6,7 +6,14 @@ export class TestStory {
     static async run() {
         const instance = new this();
         await instance.beforeRun();
-        await instance.run();
+
+        try {
+            await instance.run();
+        } catch (e) {
+            await instance.afterRun();
+            throw e;
+        }
+
         await instance.afterRun();
     }
 
