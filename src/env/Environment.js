@@ -137,6 +137,12 @@ export class Environment {
         const testsDuration = Date.now() - this.startTime;
 
         this.setDuration(testsDuration);
+
+        const story = this.getSelectedStory();
+        const { total, expected } = this.results;
+        if (!story && total !== expected) {
+            this.setBlock(`Unexpected count of tests: ${total}. Expected ${expected}`, 'warn');
+        }
     }
 
     async runTests() {
