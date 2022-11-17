@@ -294,7 +294,7 @@ assert.deepMeet = (obj, expectedObj, ret = false) => {
     }
 
     for (const vKey in expectedObj) {
-        if (Object.prototype.hasOwnProperty.call(expectedObj, vKey)) {
+        if (!Object.prototype.hasOwnProperty.call(expectedObj, vKey)) {
             continue;
         }
 
