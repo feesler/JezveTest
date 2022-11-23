@@ -77,6 +77,8 @@ export const wait = (condition, options) => env.wait(condition, options);
 
 export const timeout = (ms) => env.timeout(ms);
 
+export const evaluate = (...args) => env.evaluate(...args);
+
 export const global = (property) => env.global(property);
 
 export const click = (elem) => env.click(elem);

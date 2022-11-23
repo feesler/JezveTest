@@ -139,6 +139,15 @@ class BrowserEnvironment extends Environment {
         }, { timeout });
     }
 
+    async evaluate(pageFunc, ...args) {
+        if (!isFunction(pageFunc)) {
+            throw new Error('Invalid page function');
+        }
+
+        const { contentWindow, contentDocument } = this.viewframe;
+        return pageFunc.call(contentWindow, contentWindow, contentDocument, ...args);
+    }
+
     async global(prop = '') {
         if (typeof prop !== 'string') {
             throw new Error('Invalid property path');
