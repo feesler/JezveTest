@@ -144,8 +144,7 @@ class BrowserEnvironment extends Environment {
             throw new Error('Invalid page function');
         }
 
-        const { contentWindow, contentDocument } = this.viewframe;
-        return pageFunc.call(contentWindow, contentWindow, contentDocument, ...args);
+        return pageFunc.call(this.viewframe.contentWindow, ...args);
     }
 
     async global(prop = '') {

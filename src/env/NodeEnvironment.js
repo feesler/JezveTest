@@ -119,10 +119,7 @@ class NodeEnvironment extends Environment {
             throw new Error('Invalid page function');
         }
 
-        const windowHandle = await this.page.evaluateHandle(() => window);
-        const documentHandle = await this.page.evaluateHandle(() => document);
-
-        return this.page.evaluate(pageFunc, windowHandle, documentHandle, ...args);
+        return this.page.evaluate(pageFunc, ...args);
     }
 
     async global(prop) {
