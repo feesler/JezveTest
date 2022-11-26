@@ -72,8 +72,12 @@ class BrowserEnvironment extends Environment {
             : selector;
     }
 
-    async closest(element, selector) {
-        return (typeof selector === 'string') ? element.closest(selector) : selector;
+    async closest(elem, selector) {
+        if (!elem || typeof selector !== 'string') {
+            return null;
+        }
+
+        return elem.closest(selector);
     }
 
     async prop(elem, prop) {
@@ -251,6 +255,7 @@ class BrowserEnvironment extends Environment {
 
         if (val === '') {
             this.dispatchInputEvent(elem, val);
+            await this.timeout(0);
             return;
         }
 
@@ -260,6 +265,8 @@ class BrowserEnvironment extends Environment {
             inputValue += char;
             this.dispatchInputEvent(elem, inputValue);
         }
+
+        await this.timeout(0);
     }
 
     async click(elem) {
@@ -267,21 +274,8 @@ class BrowserEnvironment extends Environment {
             return;
         }
 
-        let event;
-        if (typeof MouseEvent !== 'function') {
-            event = this.vdoc.createEvent('MouseEvent');
-            event.initMouseEvent('click',
-                true, true, this.viewframe.contentWindow,
-                0, 0, 0, 0, 0, false, false, false, false, 0, null);
-        } else {
-            event = new MouseEvent('click', {
-                view: this.viewframe.contentWindow,
-                bubbles: true,
-                cancelable: true,
-            });
-        }
-
-        elem.dispatchEvent(event);
+        elem.click();
+        await this.timeout(0);
     }
 
     async httpReq(method, url, data, headers = {}) {
