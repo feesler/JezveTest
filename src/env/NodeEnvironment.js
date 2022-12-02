@@ -53,8 +53,11 @@ class NodeEnvironment extends Environment {
         const parentSpecified = (args.length > 1);
         const selector = parentSpecified ? args[1] : args[0];
         const parent = parentSpecified ? args[0] : this.page;
+        if (!parent || typeof selector !== 'string') {
+            return null;
+        }
 
-        return (typeof selector === 'string') ? parent.$(selector) : selector;
+        return parent.$(selector);
     }
 
     async queryAll(...args) {
@@ -65,8 +68,11 @@ class NodeEnvironment extends Environment {
         const parentSpecified = (args.length > 1);
         const selector = parentSpecified ? args[1] : args[0];
         const parent = parentSpecified ? args[0] : this.page;
+        if (!parent || typeof selector !== 'string') {
+            return null;
+        }
 
-        return (typeof selector === 'string') ? parent.$$(selector) : selector;
+        return parent.$$(selector);
     }
 
     async closest(elem, selector) {
@@ -137,6 +143,10 @@ class NodeEnvironment extends Environment {
     }
 
     async hasClass(elem, className) {
+        if (!elem || typeof className !== 'string') {
+            return null;
+        }
+
         return elem.evaluate((el, cl) => el.classList.contains(cl), className);
     }
 
@@ -195,7 +205,11 @@ class NodeEnvironment extends Environment {
 
     /** Trigger 'onchange' event */
     async onChange(elem) {
-        return elem.evaluate((el) => {
+        if (!elem) {
+            return;
+        }
+
+        await elem.evaluate((el) => {
             if ('createEvent' in document) {
                 const evt = document.createEvent('HTMLEvents');
                 evt.initEvent('change', true, false);
@@ -207,28 +221,39 @@ class NodeEnvironment extends Environment {
     }
 
     async click(elem) {
-        return elem.evaluate((el) => el.click());
+        if (!elem) {
+            return;
+        }
+
+        await elem.evaluate((el) => el.click());
     }
 
     /* eslint-disable no-param-reassign */
     async input(elem, val) {
-        if (val === '') {
-            await elem.focus();
-            await this.page.keyboard.down('ControlLeft');
-            await this.page.keyboard.press('KeyA');
-            await this.page.keyboard.up('ControlLeft');
-            return this.page.keyboard.press('Delete');
+        if (!elem) {
+            return;
         }
 
-        await elem.evaluate((el) => {
-            el.value = '';
-        });
-        return elem.type(val.toString());
+        await elem.focus();
+        await this.page.keyboard.down('ControlLeft');
+        await this.page.keyboard.press('KeyA');
+        await this.page.keyboard.up('ControlLeft');
+        await this.page.keyboard.press('Delete');
+
+        if (val === '') {
+            return;
+        }
+
+        await elem.type(val.toString());
     }
     /* eslint-enable no-param-reassign */
 
     async onBlur(elem) {
-        return elem.evaluate((el) => el.onblur());
+        if (!elem) {
+            return;
+        }
+
+        await elem.evaluate((el) => el.onblur());
     }
 
     /** Split attribute-value string divided by separator */

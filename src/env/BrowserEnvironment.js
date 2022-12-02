@@ -54,8 +54,11 @@ class BrowserEnvironment extends Environment {
         const parentSpecified = (args.length > 1);
         const selector = parentSpecified ? args[1] : args[0];
         const parent = parentSpecified ? args[0] : this.vdoc.documentElement;
+        if (!parent || typeof selector !== 'string') {
+            return null;
+        }
 
-        return (typeof selector === 'string') ? parent.querySelector(selector) : selector;
+        return parent.querySelector(selector);
     }
 
     async queryAll(...args) {
@@ -66,10 +69,11 @@ class BrowserEnvironment extends Environment {
         const parentSpecified = (args.length > 1);
         const selector = parentSpecified ? args[1] : args[0];
         const parent = parentSpecified ? args[0] : this.vdoc.documentElement;
+        if (!parent || typeof selector !== 'string') {
+            return null;
+        }
 
-        return (typeof selector === 'string')
-            ? Array.from(parent.querySelectorAll(selector))
-            : selector;
+        return Array.from(parent.querySelectorAll(selector));
     }
 
     async closest(elem, selector) {
@@ -165,8 +169,12 @@ class BrowserEnvironment extends Environment {
         return res;
     }
 
-    async hasClass(elem, cl) {
-        return elem.classList.contains(cl);
+    async hasClass(elem, className) {
+        if (!elem || typeof className !== 'string') {
+            return null;
+        }
+
+        return elem.classList.contains(className);
     }
 
     /** elem could be an id string or element handle */
@@ -217,6 +225,10 @@ class BrowserEnvironment extends Environment {
 
     /** Trigger 'onchange' event */
     async onChange(elem) {
+        if (!elem) {
+            return;
+        }
+
         if ('createEvent' in this.vdoc) {
             const evt = this.vdoc.createEvent('HTMLEvents');
             evt.initEvent('change', true, false);
@@ -227,10 +239,18 @@ class BrowserEnvironment extends Environment {
     }
 
     async onBlur(elem) {
-        return elem.onblur();
+        if (!elem) {
+            return;
+        }
+
+        await elem.onblur();
     }
 
     dispatchInputEvent(elem, val) {
+        if (!elem) {
+            return;
+        }
+
         /* eslint-disable no-param-reassign */
         elem.value = val;
 
@@ -249,7 +269,7 @@ class BrowserEnvironment extends Environment {
     }
 
     async input(elem, val) {
-        if (elem.value === '' && val === '') {
+        if (!elem || (elem.value === '' && val === '')) {
             return;
         }
 
