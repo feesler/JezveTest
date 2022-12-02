@@ -322,3 +322,111 @@ assert.deepMeet = (obj, expectedObj, ret = false) => {
 
     return res;
 };
+
+/**
+ * Compare object with expected
+ * @param {Object} obj
+ * @param {Object} expectedObj
+ * @param {boolean} ret - return or throw
+ */
+assert.exactMeet = (obj, expectedObj, ret = false) => {
+    // Check is same object
+    if (obj === expectedObj) {
+        return true;
+    }
+
+    let res = true;
+    const failResult = {
+        key: '',
+        value: obj,
+        expected: expectedObj,
+    };
+
+    // Check for NaN value
+    if (Number.isNaN(expectedObj)) {
+        if (Number.isNaN(obj)) {
+            return true;
+        }
+        if (ret) {
+            return failResult;
+        }
+        throw new Error(`Not expected value "${obj}", "${expectedObj}" is expected`);
+    }
+
+    if (
+        (!isObject(obj) && !Array.isArray(obj))
+        || (!isObject(expectedObj) && !Array.isArray(expectedObj))
+        || (isObject(obj) !== isObject(expectedObj))
+        || (Array.isArray(obj) !== Array.isArray(expectedObj))
+    ) {
+        if (ret) {
+            return failResult;
+        }
+        throw new Error(`Not expected value "${obj}", "${expectedObj}" is expected`);
+    }
+
+    if (Array.isArray(expectedObj)) {
+        if (obj.length !== expectedObj.length) {
+            if (ret) {
+                return {
+                    key: 'length',
+                    value: obj.length,
+                    expected: expectedObj.length,
+                };
+            }
+            throw new Error(`Invalid length of array: ${obj.length}, ${expectedObj.length} is expected`);
+        }
+        // Check every item in array has same value as in expected array
+        expectedObj.every((expectedValue, index) => {
+            const value = obj[index];
+            res = assert.exactMeet(value, expectedValue, true);
+            if (res !== true) {
+                res.key = `[${index}].${res.key}`;
+                return false;
+            }
+
+            return true;
+        });
+    } else if (isObject(expectedObj)) {
+        const keys = Object.keys(obj);
+        const expectedKeys = Object.keys(expectedObj);
+        // Check all keys from expected object has same value
+        for (const key of expectedKeys) {
+            if (!(key in obj)) {
+                res = { key };
+                break;
+            }
+
+            const value = obj[key];
+            const expectedValue = expectedObj[key];
+            res = assert.exactMeet(value, expectedValue, true);
+            if (res !== true) {
+                res.key = `${key}.${res.key}`;
+                break;
+            }
+        }
+        // Check no excess keys in object
+        if (res === true) {
+            for (const key of keys) {
+                if (!(key in expectedObj)) {
+                    res = {
+                        key,
+                        value: obj[key],
+                        expected: expectedObj[key],
+                    };
+                    break;
+                }
+            }
+        }
+    }
+
+    if (res !== true && !ret) {
+        if ('expected' in res) {
+            throw new Error(`Not expected value "${res.value}" for (${res.key}) "${res.expected}" is expected`);
+        } else {
+            throw new Error(`Path (${res.key}) not found`);
+        }
+    }
+
+    return res;
+};
