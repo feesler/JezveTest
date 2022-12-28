@@ -1,6 +1,6 @@
 import { isFunction, isObject } from '../utils.js';
 import { assert } from '../assert.js';
-import { isVisible } from '../index.js';
+import { isVisible, evaluate } from '../index.js';
 
 export class TestComponent {
     static async create(...args) {
@@ -96,18 +96,68 @@ export class TestComponent {
         await this.parse();
     }
 
+    async evaluateVisibility(items) {
+        return evaluate((...elements) => {
+            const cachedElements = [];
+            const cachedVisibility = [];
+            const res = [];
+
+            for (let index = 0; index < elements.length; index += 1) {
+                let elem = elements[index];
+                if (!elem) {
+                    res.push(false);
+                    continue;
+                }
+
+                while (elem && elem.nodeType && elem.nodeType !== 9) {
+                    let visible;
+                    const cacheInd = cachedElements.indexOf(elem);
+                    if (cacheInd !== -1) {
+                        visible = cachedVisibility[cacheInd];
+                    } else {
+                        const style = getComputedStyle(elem, '');
+                        visible = (
+                            style
+                            && style.display !== 'none'
+                            && style.visibility !== 'hidden'
+                        );
+                        cachedElements.push(elem);
+                        cachedVisibility.push(visible);
+                    }
+
+                    if (!visible) {
+                        elem = null;
+                        break;
+                    }
+
+                    elem = elem.parentNode;
+                }
+
+                res.push(!!elem);
+            }
+
+            return res;
+        }, ...items);
+    }
+
     async resolveContentVisibility() {
-        for (const key in this.content) {
-            if (!Object.prototype.hasOwnProperty.call(this.content, key)) {
-                continue;
+        const contentKeys = Object.keys(this.content);
+        const components = [];
+        const elems = [];
+        for (let index = 0; index < contentKeys.length; index += 1) {
+            const componentName = contentKeys[index];
+            const component = this.content[componentName];
+            if (isObject(component)) {
+                components.push(component);
+                elems.push(component.elem);
             }
+        }
 
-            const component = this.content[key];
-            if (!isObject(component)) {
-                continue;
-            }
+        const visibility = await this.evaluateVisibility(elems, false);
 
-            const visible = await TestComponent.isVisible(component);
+        for (let index = 0; index < components.length; index += 1) {
+            const component = components[index];
+            const visible = !!visibility[index];
             if (component.content && isFunction(component.checkValues)) {
                 component.content.visible = visible;
             } else {
