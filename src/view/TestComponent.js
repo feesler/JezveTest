@@ -233,7 +233,7 @@ export class TestComponent {
         return res;
     }
 
-    async checkState(state) {
+    checkState(state) {
         const stateObj = (typeof state === 'undefined') ? this.expectedState : state;
         if (!stateObj) {
             throw new Error('Invalid expected state object');
