@@ -50,12 +50,12 @@ export class TestComponent {
         return {};
     }
 
-    async buildModel() {
+    buildModel() {
         return {};
     }
 
-    async updateModel() {
-        this.model = await this.buildModel(this.content);
+    updateModel() {
+        this.model = this.buildModel(this.content);
     }
 
     async parse() {
@@ -63,7 +63,7 @@ export class TestComponent {
         await this.postParse();
         await this.resolveContentVisibility();
 
-        await this.updateModel();
+        this.updateModel();
     }
 
     /* eslint-disable-next-line no-empty-function */
