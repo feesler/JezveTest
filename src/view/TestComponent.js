@@ -115,12 +115,17 @@ export class TestComponent {
                     if (cacheInd !== -1) {
                         visible = cachedVisibility[cacheInd];
                     } else {
-                        const style = getComputedStyle(elem, '');
-                        visible = (
-                            style
-                            && style.display !== 'none'
-                            && style.visibility !== 'hidden'
-                        );
+                        if (elem.hasAttribute('hidden')) {
+                            visible = false;
+                        } else {
+                            const style = getComputedStyle(elem, '');
+                            visible = (
+                                style
+                                && style.display !== 'none'
+                                && style.visibility !== 'hidden'
+                            );
+                        }
+
                         cachedElements.push(elem);
                         cachedVisibility.push(visible);
                     }
