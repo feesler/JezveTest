@@ -152,10 +152,19 @@ export class TestComponent {
         for (let index = 0; index < contentKeys.length; index += 1) {
             const componentName = contentKeys[index];
             const component = this.content[componentName];
-            if (isObject(component)) {
-                components.push(component);
-                elems.push(component.elem);
+            if (!isObject(component)) {
+                continue;
             }
+
+            const content = (component.content && isFunction(component.checkValues))
+                ? component.content
+                : component;
+            if ('visible' in content) {
+                continue;
+            }
+
+            components.push(component);
+            elems.push(component.elem);
         }
 
         const visibility = await this.evaluateVisibility(elems, false);
