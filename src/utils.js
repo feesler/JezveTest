@@ -223,8 +223,8 @@ export const dateToLocaleDateString = (date, locales = [], options = {}) => (
 );
 
 /** Returns short-style formatted date string */
-export const formatDate = (date, locales = []) => (
-    dateToLocaleDateString(date, locales)
+export const formatDate = (date, locales = [], options = {}) => (
+    dateToLocaleDateString(date, locales, options)
 );
 
 /** Returns object with positions of date parts and separator */
