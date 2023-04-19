@@ -228,14 +228,15 @@ export const formatDate = (date, locales = [], options = {}) => (
 );
 
 /** Returns object with positions of date parts and separator */
-export const getLocaleDateFormat = (locales = []) => {
-    const formatter = Intl.DateTimeFormat(locales);
+export const getLocaleDateFormat = (locales = [], options = {}) => {
+    const formatter = Intl.DateTimeFormat(locales, options);
     const parts = formatter.formatToParts();
 
     const res = {
         dayIndex: -1,
         monthIndex: -1,
         yearIndex: -1,
+        yearLength: 0,
         separator: null,
     };
 
@@ -251,6 +252,7 @@ export const getLocaleDateFormat = (locales = []) => {
         }
         if (part.type === 'year') {
             res.yearIndex = index;
+            res.yearLength = part.value.length;
             index += 1;
         }
         if (part.type === 'literal') {
@@ -262,12 +264,12 @@ export const getLocaleDateFormat = (locales = []) => {
 };
 
 /** Returns date parsed from string accodring to specified locale */
-export const parseDateString = (str, locales = []) => {
+export const parseDateString = (str, locales = [], options = {}) => {
     if (typeof str !== 'string' || str.length === 0) {
         return NaN;
     }
 
-    const format = getLocaleDateFormat(locales);
+    const format = getLocaleDateFormat(locales, options);
     if (
         !format
         || format.dayIndex === -1
@@ -281,7 +283,11 @@ export const parseDateString = (str, locales = []) => {
     const dateParts = str.split(format.separator);
     const day = parseInt(dateParts[format.dayIndex], 10);
     const month = parseInt(dateParts[format.monthIndex], 10);
-    const year = parseInt(dateParts[format.yearIndex], 10);
+    let year = parseInt(dateParts[format.yearIndex], 10);
+
+    if (format.yearLength === 2 && year < 100) {
+        year += (year >= 70) ? 1900 : 2000;
+    }
 
     if (
         !(day >= 1 && day <= 31)
@@ -294,9 +300,9 @@ export const parseDateString = (str, locales = []) => {
     return new Date(Date.UTC(year, month - 1, day));
 };
 
-/** Check string is correct date in dd.mm.yyyy format */
-export const isValidDateString = (str, locale = []) => {
-    const date = parseDateString(str, locale);
+/** Returns true if specified argument is valid date string for current locale */
+export const isValidDateString = (str, locales = [], options = {}) => {
+    const date = parseDateString(str, locales, options);
     return isDate(date);
 };
 
