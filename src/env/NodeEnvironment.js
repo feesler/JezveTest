@@ -160,9 +160,7 @@ class NodeEnvironment extends Environment {
             return false;
         }
 
-        return (recursive)
-            ? relem.evaluate(visibilityResolver, recursive)
-            : relem.isVisible();
+        return relem.evaluate(visibilityResolver, recursive);
     }
 
     /** Select item with specified value if exist */
