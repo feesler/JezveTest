@@ -184,6 +184,10 @@ export function visibilityResolver(elem, recursive) {
     let robj = elem;
 
     while (robj && robj.nodeType && robj.nodeType !== 9) {
+        if (robj.hasAttribute('hidden')) {
+            return false;
+        }
+
         const cStyle = getComputedStyle(robj, '');
         if (
             !cStyle
