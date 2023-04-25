@@ -221,14 +221,9 @@ export const leadZero = (val) => {
     return v.toString();
 };
 
-/** Return fixed locale string without RTL characters */
-export const dateToLocaleDateString = (date, locales = [], options = {}) => (
-    date.toLocaleDateString(locales, options).replace(/\u200e/g, '')
-);
-
-/** Returns short-style formatted date string */
+/** Returns fixed date locale string without RTL characters */
 export const formatDate = (date, locales = [], options = {}) => (
-    dateToLocaleDateString(date, locales, options)
+    date.toLocaleDateString(locales, options).replace(/\u200e/g, '')
 );
 
 /** Returns object with positions of date parts and separator */
