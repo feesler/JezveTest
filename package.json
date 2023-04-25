@@ -1,6 +1,6 @@
 {
     "name": "jezve-test",
-    "version": "1.7.0",
+    "version": "1.7.1",
     "description": "Testing utility written from scratch",
     "main": "src/index.js",
     "type": "module",
@@ -32,7 +32,7 @@
     "homepage": "https://github.com/feesler/JezveTest#readme",
     "dependencies": {
         "chalk": "^2.4.2",
-        "puppeteer": "^19.9.1"
+        "puppeteer": "19.7.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.21.0",
