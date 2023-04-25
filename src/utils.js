@@ -222,13 +222,13 @@ export const leadZero = (val) => {
 };
 
 /** Returns fixed date locale string without RTL characters */
-export const formatDate = (date, locales = [], options = {}) => (
-    date.toLocaleDateString(locales, options).replace(/\u200e/g, '')
+export const formatDate = (date, params = {}) => (
+    date.toLocaleDateString(params?.locales ?? [], params?.options ?? {}).replace(/\u200e/g, '')
 );
 
 /** Returns object with positions of date parts and separator */
-export const getLocaleDateFormat = (locales = [], options = {}) => {
-    const formatter = Intl.DateTimeFormat(locales, options);
+export const getLocaleDateFormat = (params = {}) => {
+    const formatter = Intl.DateTimeFormat(params?.locales ?? [], params?.options ?? {});
     const parts = formatter.formatToParts();
 
     const res = {
@@ -263,12 +263,12 @@ export const getLocaleDateFormat = (locales = [], options = {}) => {
 };
 
 /** Returns date parsed from string accodring to specified locale */
-export const parseDateString = (str, locales = [], options = {}) => {
+export const parseDateString = (str, params = {}) => {
     if (typeof str !== 'string' || str.length === 0) {
         return NaN;
     }
 
-    const format = getLocaleDateFormat(locales, options);
+    const format = getLocaleDateFormat(params);
     if (
         !format
         || format.dayIndex === -1
@@ -300,10 +300,9 @@ export const parseDateString = (str, locales = [], options = {}) => {
 };
 
 /** Returns true if specified argument is valid date string for current locale */
-export const isValidDateString = (str, locales = [], options = {}) => {
-    const date = parseDateString(str, locales, options);
-    return isDate(date);
-};
+export const isValidDateString = (str, params = {}) => (
+    isDate(parseDateString(str, params))
+);
 
 const SECOND = 1000;
 const MINUTE = 60000;
