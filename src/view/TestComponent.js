@@ -206,6 +206,15 @@ export class TestComponent {
                     break;
                 }
             } else if (Array.isArray(expected)) {
+                if (expected.length !== control.length) {
+                    res = {
+                        key: `${countrolName}.length`,
+                        value: control.length,
+                        expected: expected.length,
+                    };
+                    break;
+                }
+
                 for (let ind = 0; ind < expected.length; ind += 1) {
                     const expectedArrayItem = expected[ind];
                     const controlArrayItem = control[ind];
@@ -220,6 +229,10 @@ export class TestComponent {
                         res.key = `${countrolName}[${ind}].${res.key}`;
                         break;
                     }
+                }
+
+                if (res !== true) {
+                    break;
                 }
             } else if (
                 (isObj && control.content && control.content.value !== expected)
