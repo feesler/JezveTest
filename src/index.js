@@ -59,6 +59,10 @@ export const onChange = (elem) => env.onChange(elem);
 
 export const onBlur = (elem) => env.onBlur(elem);
 
+export const setSelection = (elem, startPos, endPos) => env.setSelection(elem, startPos, endPos);
+
+export const setCursorPos = (elem, pos) => env.setCursorPos(elem, pos);
+
 export const prop = (elem, property) => env.prop(elem, property);
 
 export const attr = (elem, attribute) => env.attr(elem, attribute);

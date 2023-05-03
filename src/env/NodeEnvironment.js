@@ -256,6 +256,21 @@ class NodeEnvironment extends Environment {
         await elem.evaluate((el) => el.onblur());
     }
 
+    async setSelection(elem, startPos, endPos) {
+        if (!elem) {
+            return;
+        }
+
+        await elem.evaluate((el, start, end) => {
+            el.focus();
+            el.setSelectionRange(start, end);
+        }, startPos, endPos);
+    }
+
+    async setCursorPos(elem, pos) {
+        await this.setSelection(elem, pos, pos);
+    }
+
     /** Split attribute-value string divided by separator */
     splitSep(str, sep) {
         const sepPos = str.indexOf(sep);

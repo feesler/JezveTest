@@ -246,6 +246,19 @@ class BrowserEnvironment extends Environment {
         await elem.onblur();
     }
 
+    async setSelection(elem, startPos, endPos) {
+        if (!elem) {
+            return;
+        }
+
+        elem.focus();
+        elem.setSelectionRange(startPos, endPos);
+    }
+
+    async setCursorPos(elem, pos) {
+        this.setSelection(elem, pos, pos);
+    }
+
     dispatchInputEvent(elem, val) {
         if (!elem) {
             return;
