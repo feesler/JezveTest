@@ -246,6 +246,35 @@ class BrowserEnvironment extends Environment {
         await elem.onblur();
     }
 
+    async setSelection(elem, startPos, endPos) {
+        if (!elem) {
+            return;
+        }
+
+        elem.focus();
+        elem.setSelectionRange(startPos, endPos);
+    }
+
+    async setCursorPos(elem, pos) {
+        this.setSelection(elem, pos, pos);
+    }
+
+    async copyText() {
+        throw new Error('copyText method not available on browser environment');
+    }
+
+    async cutText() {
+        throw new Error('cutText method not available on browser environment');
+    }
+
+    async pasteText() {
+        throw new Error('pasteText method not available on browser environment');
+    }
+
+    async pressKey() {
+        throw new Error('pressKey method not available on browser environment');
+    }
+
     dispatchInputEvent(elem, val) {
         if (!elem) {
             return;
@@ -287,6 +316,10 @@ class BrowserEnvironment extends Environment {
         }
 
         await this.timeout(0);
+    }
+
+    async typeText() {
+        throw new Error('typeText method not available on browser environment');
     }
 
     async click(elem) {

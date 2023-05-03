@@ -59,6 +59,18 @@ export const onChange = (elem) => env.onChange(elem);
 
 export const onBlur = (elem) => env.onBlur(elem);
 
+export const setSelection = (elem, startPos, endPos) => env.setSelection(elem, startPos, endPos);
+
+export const setCursorPos = (elem, pos) => env.setCursorPos(elem, pos);
+
+export const copyText = () => env.copyText();
+
+export const cutText = () => env.cutText();
+
+export const pasteText = () => env.pasteText();
+
+export const pressKey = (value) => env.pressKey(value);
+
 export const prop = (elem, property) => env.prop(elem, property);
 
 export const attr = (elem, attribute) => env.attr(elem, attribute);
@@ -84,6 +96,8 @@ export const global = (property) => env.global(property);
 export const click = (elem) => env.click(elem);
 
 export const input = (elem, val) => env.input(elem, val);
+
+export const typeText = (elem, val) => env.typeText(elem, val);
 
 export const httpReq = (method, link, data, headers) => (
     env.httpReq(method, link, data, headers)
