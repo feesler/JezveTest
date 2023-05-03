@@ -248,6 +248,14 @@ class NodeEnvironment extends Environment {
     }
     /* eslint-enable no-param-reassign */
 
+    async typeText(elem, val) {
+        if (!elem || val === '') {
+            return;
+        }
+
+        await elem.type(val.toString());
+    }
+
     async onBlur(elem) {
         if (!elem) {
             return;
@@ -269,6 +277,28 @@ class NodeEnvironment extends Environment {
 
     async setCursorPos(elem, pos) {
         await this.setSelection(elem, pos, pos);
+    }
+
+    async copyText() {
+        await this.page.keyboard.down('ControlLeft');
+        await this.page.keyboard.press('KeyC');
+        await this.page.keyboard.up('ControlLeft');
+    }
+
+    async cutText() {
+        await this.page.keyboard.down('ControlLeft');
+        await this.page.keyboard.press('KeyX');
+        await this.page.keyboard.up('ControlLeft');
+    }
+
+    async pasteText() {
+        await this.page.keyboard.down('ControlLeft');
+        await this.page.keyboard.press('KeyV');
+        await this.page.keyboard.up('ControlLeft');
+    }
+
+    async pressKey(value) {
+        await this.page.keyboard.press(value);
     }
 
     /** Split attribute-value string divided by separator */
