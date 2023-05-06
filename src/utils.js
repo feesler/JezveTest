@@ -1,3 +1,7 @@
+const SECOND = 1000;
+const MINUTE = 60000;
+const HOUR = 3600000;
+
 /** Check parameter is date */
 export const isDate = (obj) => (
     obj instanceof Date && !Number.isNaN(obj.valueOf())
@@ -284,7 +288,7 @@ export const parseDateString = (str, params = {}) => {
     const month = parseInt(dateParts[format.monthIndex], 10);
     let year = parseInt(dateParts[format.yearIndex], 10);
 
-    if (format.yearLength === 2 && year < 100) {
+    if (year < 100) {
         year += (year >= 70) ? 1900 : 2000;
     }
 
@@ -303,10 +307,6 @@ export const parseDateString = (str, params = {}) => {
 export const isValidDateString = (str, params = {}) => (
     isDate(parseDateString(str, params))
 );
-
-const SECOND = 1000;
-const MINUTE = 60000;
-const HOUR = 3600000;
 
 /** Format time in milliseconds to HH:MM:SS format */
 export const formatTime = (time) => {
