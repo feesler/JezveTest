@@ -205,7 +205,7 @@ export class TestComponent {
                     res.key = `${countrolName}.${res.key}`;
                     break;
                 }
-            } else if (Array.isArray(expected)) {
+            } else if (Array.isArray(expected) && Array.isArray(control)) {
                 if (expected.length !== control.length) {
                     res = {
                         key: `${countrolName}.length`,
