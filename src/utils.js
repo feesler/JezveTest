@@ -322,25 +322,6 @@ export const formatTime = (time) => {
     return `${leadZero(hours)}:${leadZero(minutes)}:${leadZero(seconds)}`;
 };
 
-/** Return deep copy of object */
-export const copyObject = (item) => {
-    if (Array.isArray(item)) {
-        return item.map(copyObject);
-    }
-
-    if (isObject(item)) {
-        const res = {};
-
-        Object.keys(item).forEach((key) => {
-            res[key] = copyObject(item[key]);
-        });
-
-        return res;
-    }
-
-    return item;
-};
-
 /** Add new DOM ready event handler to the queue */
 export const onReady = (handler) => {
     document.addEventListener('DOMContentLoaded', handler, false);

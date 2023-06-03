@@ -1,6 +1,5 @@
 import {
     isObject,
-    copyObject,
     formatTime,
     isFunction,
     visibilityResolver,
@@ -450,7 +449,7 @@ class BrowserEnvironment extends Environment {
 
     setErrorHandler() {
         window.addEventListener('message', (e) => {
-            this.viewError = copyObject(e.data);
+            this.viewError = structuredClone(e.data);
             this.errorHandler(this.viewError);
         });
     }
