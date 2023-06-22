@@ -180,7 +180,7 @@ export class TestComponent {
         }
     }
 
-    checkValues(controls, ret = false) {
+    checkValues(controls, path = '', ret = false) {
         let res = true;
 
         for (const countrolName in controls) {
@@ -189,7 +189,7 @@ export class TestComponent {
             }
 
             if (!(countrolName in this.content)) {
-                throw new Error(`Control (${countrolName}) not found`);
+                throw new Error(`Control (${path}.${countrolName}) not found`);
             }
             const expected = controls[countrolName];
             const control = this.content[countrolName];
@@ -197,18 +197,18 @@ export class TestComponent {
 
             if (isObject(expected)) {
                 if (control && isFunction(control.checkValues)) {
-                    res = control.checkValues(expected, true);
+                    res = control.checkValues(expected, `${path}.${countrolName}`, true);
                 } else {
                     res = assert.deepMeet(control, expected, true);
                 }
                 if (res !== true) {
-                    res.key = `${countrolName}.${res.key}`;
+                    res.key = `${path}.${countrolName}.${res.key}`;
                     break;
                 }
             } else if (Array.isArray(expected) && Array.isArray(control)) {
                 if (expected.length !== control.length) {
                     res = {
-                        key: `${countrolName}.length`,
+                        key: `${path}.${countrolName}.length`,
                         value: control.length,
                         expected: expected.length,
                     };
@@ -220,13 +220,13 @@ export class TestComponent {
                     const controlArrayItem = control[ind];
 
                     if (controlArrayItem && isFunction(controlArrayItem.checkValues)) {
-                        res = controlArrayItem.checkValues(expectedArrayItem, true);
+                        res = controlArrayItem.checkValues(expectedArrayItem, `${path}.${countrolName}[${ind}]`, true);
                     } else {
                         res = assert.deepMeet(controlArrayItem, expectedArrayItem, true);
                     }
 
                     if (res !== true) {
-                        res.key = `${countrolName}[${ind}].${res.key}`;
+                        res.key = `${path}.${countrolName}[${ind}].${res.key}`;
                         break;
                     }
                 }
