@@ -11,8 +11,9 @@
     ],
     "scripts": {
         "lint": "eslint --quiet ./src/",
+        "test": "node ./tests/scenario/index.js",
         "build": "webpack",
-        "all": "npm-run-all lint",
+        "all": "npm-run-all lint test",
         "inst-pkg": "npm install",
         "update": "npm update --save",
         "pub-pkg": "npm publish",
