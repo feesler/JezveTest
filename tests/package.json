@@ -1,0 +1,14 @@
+{
+    "name": "tests",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "author": "Ilya Makarov",
+    "license": "ISC",
+    "scripts": {
+        "test": "node index.js"
+    },
+    "dependencies": {
+        "jezve-test": "^1.12.0"
+    }
+}

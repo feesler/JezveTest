@@ -189,26 +189,32 @@ export class TestComponent {
             }
 
             if (!(countrolName in this.content)) {
-                throw new Error(`Control (${path}.${countrolName}) not found`);
+                throw new Error(`Control '${path}${countrolName}' not found`);
             }
             const expected = controls[countrolName];
             const control = this.content[countrolName];
             const isObj = isObject(control);
 
             if (isObject(expected)) {
-                if (control && isFunction(control.checkValues)) {
-                    res = control.checkValues(expected, `${path}.${countrolName}`, true);
+                const isTestComponent = isFunction(control?.checkValues);
+
+                if (isTestComponent) {
+                    res = control.checkValues(expected, `${path}${countrolName}.`);
                 } else {
                     res = assert.deepMeet(control, expected, true);
                 }
+
                 if (res !== true) {
-                    res.key = `${path}.${countrolName}.${res.key}`;
+                    if (!isTestComponent) {
+                        res.key = `${path}${countrolName}.${res.key}`;
+                    }
+
                     break;
                 }
             } else if (Array.isArray(expected) && Array.isArray(control)) {
                 if (expected.length !== control.length) {
                     res = {
-                        key: `${path}.${countrolName}.length`,
+                        key: `${path}${countrolName}.length`,
                         value: control.length,
                         expected: expected.length,
                     };
@@ -218,15 +224,19 @@ export class TestComponent {
                 for (let ind = 0; ind < expected.length; ind += 1) {
                     const expectedArrayItem = expected[ind];
                     const controlArrayItem = control[ind];
+                    const isTestComponent = isFunction(controlArrayItem?.checkValues);
 
-                    if (controlArrayItem && isFunction(controlArrayItem.checkValues)) {
-                        res = controlArrayItem.checkValues(expectedArrayItem, `${path}.${countrolName}[${ind}]`, true);
+                    if (isTestComponent) {
+                        res = controlArrayItem.checkValues(expectedArrayItem, `${path}${countrolName}[${ind}].`);
                     } else {
                         res = assert.deepMeet(controlArrayItem, expectedArrayItem, true);
                     }
 
                     if (res !== true) {
-                        res.key = `${path}.${countrolName}[${ind}].${res.key}`;
+                        if (!isTestComponent) {
+                            res.key = `${path}${countrolName}[${ind}].${res.key}`;
+                        }
+
                         break;
                     }
                 }
@@ -250,9 +260,9 @@ export class TestComponent {
         if (res !== true && !ret) {
             let msg;
             if ('expected' in res) {
-                msg = `Not expected value "${res.value}" for (${res.key}) "${res.expected}" is expected`;
+                msg = `Not expected value "${res.value}" for (${path}${res.key}) "${res.expected}" is expected`;
             } else {
-                msg = `Path (${res.key}) not found`;
+                msg = `Path (${path}${res.key}) not found`;
             }
             throw new Error(msg);
         }

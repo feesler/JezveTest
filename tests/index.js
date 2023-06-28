@@ -1,29 +1,31 @@
-import { BrowserEnvironment } from '../src/env/BrowserEnvironment.js';
-import { TestApplication, onReady } from '../src/index.js';
+import { environment } from 'jezve-test/NodeEnvironment';
+import { onReady } from 'jezve-test';
 
-class Application extends TestApplication {
-    async init() {
+import { App } from './app.js';
+
+const isBrowser = typeof window !== 'undefined';
+const options = {
+    app: App,
+    validateContent: () => (true),
+    routeHandler: () => { },
+    appPath: '/',
+};
+
+const run = async () => {
+    if (isBrowser) {
+        const { origin } = window.location;
+        if (origin.includes('localtest')) {
+            options.appPath = '/tests/dist/';
+        }
+
+        options.container = document.getElementById('testscontainer');
     }
 
-    async startTests() {
-    }
+    environment.init(options);
+};
+
+if (isBrowser) {
+    onReady(() => run());
+} else {
+    run();
 }
-
-const App = new Application();
-
-
-onReady(() => {
-    setTimeout(() => {
-        const environment = new BrowserEnvironment();
-
-        const options = {
-            app: App,
-            validateContent: () => (true),
-            routeHandler: () => {},
-            appPath: '/',
-            container: document.getElementById('testscontainer'),
-        };
-
-        environment.init(options);
-    });
-});

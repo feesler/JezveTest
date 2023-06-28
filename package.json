@@ -1,25 +1,22 @@
 {
-    "name": "jezve-test",
-    "version": "1.11.2",
+    "name": "jezve-test-monorepo",
+    "version": "1.0.0",
+    "private": true,
     "description": "Testing utility written from scratch",
-    "main": "src/index.js",
     "type": "module",
-    "jsnext:main": "src/index.js",
-    "module": "src/index.js",
-    "files": [
-        "src"
-    ],
+    "module": "tests/scenario/index.js",
     "scripts": {
-        "lint": "eslint --quiet ./src/",
+        "lint": "eslint --quiet ./packages/jezve-test/src/**/*.js",
+        "test": "npm run test -w tests",
         "build": "webpack",
-        "all": "npm-run-all lint",
-        "inst-pkg": "npm install",
+        "all": "npm-run-all lint test",
+        "i-jezve-test": "npm install -w jezve-test",
+        "p-jezve-test": "npm publish -w jezve-test",
         "update": "npm update --save",
-        "pub-pkg": "npm publish",
-        "release": "npm-run-all inst-pkg update pub-pkg",
-        "ver-major": "npm version major",
-        "ver-minor": "npm version minor",
-        "ver-patch": "npm version patch",
+        "release": "npm-run-all i-jezve-test update p-jezve-test",
+        "ver-major": "npm version major -w jezve-test",
+        "ver-minor": "npm version minor -w jezve-test",
+        "ver-patch": "npm version patch -w jezve-test",
         "release-major": "npm-run-all all ver-major release",
         "release-minor": "npm-run-all all ver-minor release",
         "release-patch": "npm-run-all all ver-patch release"
@@ -63,9 +60,8 @@
         "webpack": "^5.88.0",
         "webpack-cli": "^4.10.0"
     },
-    "exports": {
-        ".": "./src/index.js",
-        "./BrowserEnvironment": "./src/env/BrowserEnvironment.js",
-        "./NodeEnvironment": "./src/env/NodeEnvironment.js"
-    }
+    "workspaces": [
+        "packages/*",
+        "tests"
+    ]
 }
