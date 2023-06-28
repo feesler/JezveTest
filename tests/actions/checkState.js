@@ -1,4 +1,4 @@
-import { TestComponent } from '../../src/index.js';
+import { TestComponent } from 'jezve-test';
 
 export const createTestComponent = (content) => {
     const isComponentContent = (content instanceof TestComponent);

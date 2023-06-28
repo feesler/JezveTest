@@ -1,0 +1,37 @@
+{
+    "name": "jezve-test",
+    "version": "1.11.2",
+    "type": "module",
+    "module": "src/index.js",
+    "description": "Testing utility written from scratch",
+    "main": "src/index.js",
+    "files": [
+        "src"
+    ],
+    "exports": {
+        ".": "./src/index.js",
+        "./BrowserEnvironment": "./src/env/BrowserEnvironment.js",
+        "./NodeEnvironment": "./src/env/NodeEnvironment.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/feesler/JezveTest.git"
+    },
+    "keywords": [
+        "test",
+        "testing",
+        "integration",
+        "TDD",
+        "BDD"
+    ],
+    "author": "Ilya Makarov",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/feesler/JezveTest/issues"
+    },
+    "homepage": "https://github.com/feesler/JezveTest#readme",
+    "dependencies": {
+        "chalk": "^2.4.2",
+        "puppeteer": "19.7.0"
+    }
+}

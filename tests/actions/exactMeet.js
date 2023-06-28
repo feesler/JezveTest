@@ -1,4 +1,4 @@
-import { assert } from '../../src/assert.js';
+import { assert } from 'jezve-test';
 
 export const testExactMeet = (obj, expected, expResult) => {
     let res = true;
