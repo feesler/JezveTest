@@ -1,10 +1,13 @@
+import { setBlock } from 'jezve-test';
 import { testCheckState, createTestComponent } from '../actions/checkState.js';
 
 /**
  * TestComponent.checkState() method tests
  */
-export const checkStateTests = () => {
-    testCheckState(
+export const checkStateTests = async () => {
+    setBlock('TestComponent.checkState() method', 1);
+
+    await testCheckState(
         {
             item1: createTestComponent({
                 title: 'Item 1',

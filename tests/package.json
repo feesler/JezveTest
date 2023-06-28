@@ -6,9 +6,9 @@
     "author": "Ilya Makarov",
     "license": "ISC",
     "scripts": {
-        "test": "node ./scenario/index.js"
+        "test": "node index.js"
     },
     "dependencies": {
-        "jezve-test": "^1.11.2"
+        "jezve-test": "^1.12.0"
     }
 }

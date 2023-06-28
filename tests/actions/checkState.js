@@ -1,4 +1,4 @@
-import { TestComponent } from 'jezve-test';
+import { TestComponent, assert, test } from 'jezve-test';
 
 export const createTestComponent = (content) => {
     const isComponentContent = (content instanceof TestComponent);
@@ -10,27 +10,22 @@ export const createTestComponent = (content) => {
     return component;
 };
 
-export const testCheckState = (content, expectedState, expResult) => {
-    let res = true;
-    let error = null;
+export const testCheckState = async (content, expectedState, expResult) => {
+    await test('TestComponent.checkState() method', () => {
+        let res = true;
+        const component = createTestComponent(content);
 
-    console.log('TestComponent.checkState()');
-
-    const component = createTestComponent(content);
-
-    try {
-        component.checkState(expectedState);
-    } catch (e) {
-        res = false;
-        error = e;
-    }
-
-    if (res !== expResult) {
-        console.log('FAIL res: ', res, ' expResult: ', expResult);
-        if (error) {
-            throw error;
+        try {
+            component.checkState(expectedState);
+        } catch (e) {
+            res = false;
+            if (expResult) {
+                throw e;
+            }
         }
-    } else {
-        console.log('OK res: ', res, ' expResult: ', expResult);
-    }
+
+        assert.equal(res, expResult, `Not expected result ${res}`);
+
+        return true;
+    });
 };

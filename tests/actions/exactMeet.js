@@ -1,16 +1,20 @@
-import { assert } from 'jezve-test';
+import { assert, test } from 'jezve-test';
 
-export const testExactMeet = (obj, expected, expResult) => {
-    let res = true;
-    try {
-        assert.exactMeet(obj, expected);
-    } catch (e) {
-        res = false;
-    }
+export const testExactMeet = async (obj, expected, expResult) => {
+    await test('assert.exactMeet() method', () => {
+        let res = true;
 
-    if (res !== expResult) {
-        console.log('FAIL res: ', res, ' expResult: ', expResult);
-    } else {
-        console.log('OK res: ', res, ' expResult: ', expResult);
-    }
+        try {
+            assert.exactMeet(obj, expected);
+        } catch (e) {
+            res = false;
+            if (expResult) {
+                throw e;
+            }
+        }
+
+        assert.equal(res, expResult, `Not expected result ${res}`);
+
+        return true;
+    });
 };
