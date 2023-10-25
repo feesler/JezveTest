@@ -1,4 +1,4 @@
-import { isFunction } from './utils.js';
+import { isFunction } from '@jezvejs/types';
 
 export class Runner {
     constructor() {

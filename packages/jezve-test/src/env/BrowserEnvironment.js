@@ -1,11 +1,8 @@
-import {
-    isObject,
-    formatTime,
-    isFunction,
-    visibilityResolver,
-    createElement,
-} from '../utils.js';
+import { createElement } from '@jezvejs/dom';
+import { formatTime } from '@jezvejs/datetime';
+import { isObject, isFunction } from '@jezvejs/types';
 import { Environment } from './Environment.js';
+import { visibilityResolver } from '../utils.js';
 
 class BrowserEnvironment extends Environment {
     constructor() {
