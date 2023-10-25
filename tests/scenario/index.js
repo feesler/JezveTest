@@ -1,14 +1,12 @@
 import {
-    assert,
     Runner,
     setBlock,
     getSelectedStory,
 } from 'jezve-test';
+import { assert } from '@jezvejs/assert';
 import { checkStateTests } from './checkState.js';
-import { exactMeetTests } from './exactMeet.js';
 
 const storiesMap = {
-    exactMeet: exactMeetTests,
     checkState: checkStateTests,
 };
 

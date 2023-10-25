@@ -1,4 +1,5 @@
-import { TestComponent, assert, test } from 'jezve-test';
+import { TestComponent, test } from 'jezve-test';
+import { assert } from '@jezvejs/assert';
 
 export const createTestComponent = (content) => {
     const isComponentContent = (content instanceof TestComponent);
