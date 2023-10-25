@@ -3,13 +3,12 @@ import http from 'http';
 import https from 'https';
 import puppeteer from 'puppeteer';
 import chalk from 'chalk';
-import {
-    formatTime,
-    isFunction,
-    isObject,
-    visibilityResolver,
-} from '../utils.js';
+
+import { formatTime } from '@jezvejs/datetime';
+import { isFunction, isObject } from '@jezvejs/types';
+
 import { Environment } from './Environment.js';
+import { visibilityResolver } from '../utils.js';
 
 class NodeEnvironment extends Environment {
     constructor(...args) {

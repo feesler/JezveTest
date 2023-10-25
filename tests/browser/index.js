@@ -1,5 +1,7 @@
+import { onReady } from '@jezvejs/dom';
+
 import { BrowserEnvironment } from '../src/env/BrowserEnvironment.js';
-import { TestApplication, onReady } from '../src/index.js';
+import { TestApplication } from '../src/index.js';
 
 class Application extends TestApplication {
     async init() {
@@ -19,7 +21,7 @@ onReady(() => {
         const options = {
             app: App,
             validateContent: () => (true),
-            routeHandler: () => {},
+            routeHandler: () => { },
             appPath: '/',
             container: document.getElementById('testscontainer'),
         };

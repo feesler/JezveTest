@@ -1,4 +1,4 @@
-import { isFunction } from '../utils.js';
+import { isFunction } from '@jezvejs/types';
 
 export class Environment {
     static instance = null;
