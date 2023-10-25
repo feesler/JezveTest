@@ -1,51 +1,22 @@
+import {
+    isDate,
+    isFunction,
+    isObject,
+    isNumber,
+    isInteger,
+} from '@jezvejs/types';
+
+export {
+    isDate,
+    isFunction,
+    isObject,
+    isNumber as isNum,
+    isInteger as isInt,
+};
+
 const SECOND = 1000;
 const MINUTE = 60000;
 const HOUR = 3600000;
-
-/** Check parameter is date */
-export const isDate = (obj) => (
-    obj instanceof Date && !Number.isNaN(obj.valueOf())
-);
-
-/** Check parameter is function */
-export const isFunction = (obj) => (
-    obj
-    && (
-        Object.prototype.toString.call(obj) === '[object Function]'
-        || typeof obj === 'function'
-    )
-);
-
-/** Check parameter is instance of Object */
-export const isObject = (obj) => (
-    obj !== null
-    && typeof obj === 'object'
-    && Object.prototype.toString.call(obj) === '[object Object]'
-);
-
-/** Check is specified string is number */
-export function isNum(val) {
-    const fval = parseFloat(val);
-    if (Number.isNaN(fval)) {
-        return false;
-    }
-
-    if (fval === 0) {
-        return true;
-    }
-
-    return !!(val / val);
-}
-
-/** Check parameter is integer */
-export function isInt(x) {
-    const y = parseInt(x, 10);
-    if (Number.isNaN(y)) {
-        return false;
-    }
-
-    return x === y && x.toString() === y.toString();
-}
 
 /** Check bit flag is set */
 /* eslint-disable no-bitwise */

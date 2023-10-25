@@ -1,5 +1,5 @@
+import { assert } from '@jezvejs/assert';
 import { isFunction, isObject } from '../utils.js';
-import { assert } from '../assert.js';
 import { isVisible, evaluate } from '../index.js';
 
 export class TestComponent {
