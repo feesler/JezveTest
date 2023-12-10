@@ -21,7 +21,7 @@ class NodeEnvironment extends Environment {
     }
 
     baseUrl() {
-        return this.base;
+        return this.base.toString();
     }
 
     async url() {
@@ -599,7 +599,8 @@ class NodeEnvironment extends Environment {
             if (!this.app.config || !this.app.config.nodeURL) {
                 throw new Error('Invalid config: test URL not found');
             }
-            this.base = this.app.config.nodeURL;
+
+            this.base = new URL(this.app.config.nodeURL);
 
             this.resetResults();
 

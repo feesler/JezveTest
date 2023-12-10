@@ -22,7 +22,7 @@ class BrowserEnvironment extends Environment {
     }
 
     baseUrl() {
-        return this.base;
+        return this.base.toString();
     }
 
     async url() {
@@ -636,10 +636,12 @@ class BrowserEnvironment extends Environment {
         this.app.environment = this;
 
         const { origin } = window.location;
-        this.base = origin;
-        this.base += (typeof options.appPath === 'string')
+        let appURL = origin;
+        appURL += (typeof options.appPath === 'string')
             ? options.appPath
             : '/';
+
+        this.base = new URL(appURL);
 
         await this.app.init();
 
