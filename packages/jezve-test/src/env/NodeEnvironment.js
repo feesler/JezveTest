@@ -631,7 +631,7 @@ class NodeEnvironment extends Environment {
             await this.app.init();
 
             const launchOptions = {
-                headless: true,
+                headless: 'new',
                 args: [
                     '--proxy-server="direct://"',
                     '--proxy-bypass-list=*',
