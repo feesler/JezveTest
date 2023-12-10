@@ -590,7 +590,8 @@ class NodeEnvironment extends Environment {
         for (const permission of permissions) {
             try {
                 await context.overridePermissions(this.base.origin, [permission]);
-            } catch(e) {
+            } catch (e) {
+                /* eslint-disable-next-line no-console */
                 console.log(e.message);
             }
         }
