@@ -5,7 +5,7 @@ import puppeteer from 'puppeteer';
 import chalk from 'chalk';
 
 import { formatTime } from '@jezvejs/datetime';
-import { isFunction, isObject } from '@jezvejs/types';
+import { asArray, isFunction, isObject } from '@jezvejs/types';
 
 import { Environment } from './Environment.js';
 import { visibilityResolver } from '../utils.js';
@@ -14,6 +14,7 @@ class NodeEnvironment extends Environment {
     constructor(...args) {
         super(...args);
 
+        this.browser = null;
         this.page = null;
         this.base = null;
         this.reqCookies = {};
@@ -21,7 +22,7 @@ class NodeEnvironment extends Environment {
     }
 
     baseUrl() {
-        return this.base;
+        return this.base.toString();
     }
 
     async url() {
@@ -575,9 +576,29 @@ class NodeEnvironment extends Environment {
         return rev;
     }
 
+    async setBrowserPermissions() {
+        if (!this.browser) {
+            throw new Error('Browser is not ready');
+        }
+
+        const permissions = asArray(this.app.config?.nodePermissions);
+        if (permissions.length === 0) {
+            return;
+        }
+
+        const context = this.browser.defaultBrowserContext();
+        for (const permission of permissions) {
+            try {
+                await context.overridePermissions(this.base.origin, [permission]);
+            } catch (e) {
+                /* eslint-disable-next-line no-console */
+                console.log(e.message);
+            }
+        }
+    }
+
     async init(options) {
         let res = 1;
-        let browser;
 
         try {
             if (!isObject(options)) {
@@ -599,7 +620,8 @@ class NodeEnvironment extends Environment {
             if (!this.app.config || !this.app.config.nodeURL) {
                 throw new Error('Invalid config: test URL not found');
             }
-            this.base = this.app.config.nodeURL;
+
+            this.base = new URL(this.app.config.nodeURL);
 
             this.resetResults();
 
@@ -610,7 +632,7 @@ class NodeEnvironment extends Environment {
             await this.app.init();
 
             const launchOptions = {
-                headless: true,
+                headless: 'new',
                 args: [
                     '--proxy-server="direct://"',
                     '--proxy-bypass-list=*',
@@ -622,9 +644,12 @@ class NodeEnvironment extends Environment {
                 launchOptions.executablePath = revisionInfo.executablePath;
             }
 
-            browser = await puppeteer.launch(launchOptions);
-            const allPages = await browser.pages();
-            this.page = (allPages.length) ? allPages[0] : await browser.newPage();
+            this.browser = await puppeteer.launch(launchOptions);
+
+            await this.setBrowserPermissions();
+
+            const allPages = await this.browser.pages();
+            this.page = (allPages.length) ? allPages[0] : await this.browser.newPage();
             this.setErrorHandler();
 
             this.addResult('Test initialization', true);
@@ -635,8 +660,9 @@ class NodeEnvironment extends Environment {
             this.addResult(e);
         }
 
-        if (browser) {
-            await browser.close();
+        if (this.browser) {
+            await this.browser.close();
+            this.browser = null;
         }
 
         /* eslint-disable-next-line no-console */

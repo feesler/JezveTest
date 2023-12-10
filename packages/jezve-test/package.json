@@ -1,6 +1,6 @@
 {
     "name": "jezve-test",
-    "version": "2.0.2",
+    "version": "2.0.3",
     "type": "module",
     "module": "src/index.js",
     "description": "Testing utility written from scratch",
@@ -36,6 +36,6 @@
         "@jezvejs/dom": "^1.0.1",
         "@jezvejs/types": "^1.0.0",
         "chalk": "^2.4.2",
-        "puppeteer": "^21.6.0"
+        "puppeteer": "19.7.0"
     }
 }
