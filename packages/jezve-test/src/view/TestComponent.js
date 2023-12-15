@@ -2,6 +2,9 @@ import { assert } from '@jezvejs/assert';
 import { isFunction, isObject } from '@jezvejs/types';
 import { isVisible, evaluate } from '../index.js';
 
+/**
+ * Base test component class
+ */
 export class TestComponent {
     static async create(...args) {
         if (args.length < 2 || !args[1]) {
@@ -54,6 +57,11 @@ export class TestComponent {
         return {};
     }
 
+    /* eslint-disable-next-line no-unused-vars */
+    getExpectedState(model = this.model) {
+        return {};
+    }
+
     updateModel() {
         this.model = this.buildModel(this.content);
     }
@@ -94,6 +102,14 @@ export class TestComponent {
         await action.call(this);
 
         await this.parse();
+    }
+
+    async runTestAction(action, model = this.model) {
+        const expected = this.getExpectedState(model);
+
+        await this.performAction(action);
+
+        return this.checkState(expected);
     }
 
     async evaluateVisibility(items) {
