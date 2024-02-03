@@ -25,7 +25,7 @@ class BrowserEnvironment extends Environment {
         return this.base.toString();
     }
 
-    async url() {
+    url() {
         return this.viewframe.contentWindow.location.href;
     }
 

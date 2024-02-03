@@ -25,7 +25,7 @@ class NodeEnvironment extends Environment {
         return this.base.toString();
     }
 
-    async url() {
+    url() {
         return this.page.url();
     }
 
