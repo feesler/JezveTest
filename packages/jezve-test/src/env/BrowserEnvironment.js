@@ -25,7 +25,7 @@ class BrowserEnvironment extends Environment {
         return this.base.toString();
     }
 
-    async url() {
+    url() {
         return this.viewframe.contentWindow.location.href;
     }
 
@@ -318,6 +318,10 @@ class BrowserEnvironment extends Environment {
         throw new Error('typeText method not available on browser environment');
     }
 
+    async screenshot() {
+        throw new Error('screenshot method not available on browser environment');
+    }
+
     async click(elem) {
         if (!elem) {
             return;
@@ -451,13 +455,25 @@ class BrowserEnvironment extends Environment {
         });
     }
 
-    async navigation(action) {
+    async navigation(action, options = {}) {
         if (!isFunction(action)) {
             throw new Error('Wrong action specified');
         }
 
+        const {
+            timeout = 30000,
+        } = options;
+
         const navPromise = new Promise((resolve, reject) => {
+            const limit = setTimeout(() => {
+                reject(new Error('Wait timeout'));
+            }, timeout);
+
             this.navigationHandler = async () => {
+                if (limit) {
+                    clearTimeout(limit);
+                }
+
                 if (this.viewError) {
                     throw this.viewError;
                 }

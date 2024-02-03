@@ -32,7 +32,7 @@ export const url = () => env.url();
 
 export const getSelectedStory = () => env.getSelectedStory();
 
-export const navigation = (action) => env.navigation(action);
+export const navigation = (action, options) => env.navigation(action, options);
 
 export const setErrorHandler = () => env.setErrorHandler();
 
@@ -109,3 +109,5 @@ export const setBlock = (title, category) => env.setBlock(title, category);
 export const setDuration = (duration) => env.setDuration(duration);
 
 export const getContent = () => env.getContent();
+
+export const screenshot = (options) => env.screenshot(options);

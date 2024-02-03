@@ -25,7 +25,7 @@ class NodeEnvironment extends Environment {
         return this.base.toString();
     }
 
-    async url() {
+    url() {
         return this.page.url();
     }
 
@@ -532,13 +532,25 @@ class NodeEnvironment extends Environment {
         this.page.on('pageerror', this.errorHandler);
     }
 
-    async navigation(action) {
+    async navigation(action, options = {}) {
         if (!isFunction(action)) {
             throw new Error('Wrong action specified');
         }
 
+        const {
+            timeout = 30000,
+        } = options;
+
         const navPromise = new Promise((resolve, reject) => {
+            const limit = setTimeout(() => {
+                reject(new Error('Wait timeout'));
+            }, timeout);
+
             this.page.once('load', async () => {
+                if (limit) {
+                    clearTimeout(limit);
+                }
+
                 try {
                     await this.onNavigate();
                     resolve();
@@ -555,6 +567,10 @@ class NodeEnvironment extends Environment {
 
     async goTo(url) {
         await this.navigation(() => this.page.goto(url));
+    }
+
+    async screenshot(options = {}) {
+        await this.page.screenshot(options);
     }
 
     async getBrowserRevision(revision) {
@@ -658,6 +674,15 @@ class NodeEnvironment extends Environment {
             res = 0;
         } catch (e) {
             this.addResult(e);
+        }
+
+        if (res !== 0) {
+            /* eslint-disable-next-line no-console */
+            console.log('Page URL: ', this.url());
+
+            if (this.app.config.errorScreenshot) {
+                await this.screenshot(this.app.config.errorScreenshot);
+            }
         }
 
         if (this.browser) {
