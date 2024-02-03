@@ -109,3 +109,5 @@ export const setBlock = (title, category) => env.setBlock(title, category);
 export const setDuration = (duration) => env.setDuration(duration);
 
 export const getContent = () => env.getContent();
+
+export const screenshot = (options) => env.screenshot(options);

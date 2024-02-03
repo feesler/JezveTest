@@ -318,6 +318,10 @@ class BrowserEnvironment extends Environment {
         throw new Error('typeText method not available on browser environment');
     }
 
+    async screenshot() {
+        throw new Error('screenshot method not available on browser environment');
+    }
+
     async click(elem) {
         if (!elem) {
             return;

@@ -557,6 +557,10 @@ class NodeEnvironment extends Environment {
         await this.navigation(() => this.page.goto(url));
     }
 
+    async screenshot(options = {}) {
+        await this.page.screenshot(options);
+    }
+
     async getBrowserRevision(revision) {
         const browserFetcher = puppeteer.createBrowserFetcher();
         const localRev = browserFetcher.revisionInfo(revision);
