@@ -455,13 +455,25 @@ class BrowserEnvironment extends Environment {
         });
     }
 
-    async navigation(action) {
+    async navigation(action, options = {}) {
         if (!isFunction(action)) {
             throw new Error('Wrong action specified');
         }
 
+        const {
+            timeout = 30000,
+        } = options;
+
         const navPromise = new Promise((resolve, reject) => {
+            const limit = setTimeout(() => {
+                reject(new Error('Wait timeout'));
+            }, timeout);
+
             this.navigationHandler = async () => {
+                if (limit) {
+                    clearTimeout(limit);
+                }
+
                 if (this.viewError) {
                     throw this.viewError;
                 }

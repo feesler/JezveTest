@@ -532,13 +532,25 @@ class NodeEnvironment extends Environment {
         this.page.on('pageerror', this.errorHandler);
     }
 
-    async navigation(action) {
+    async navigation(action, options = {}) {
         if (!isFunction(action)) {
             throw new Error('Wrong action specified');
         }
 
+        const {
+            timeout = 30000,
+        } = options;
+
         const navPromise = new Promise((resolve, reject) => {
+            const limit = setTimeout(() => {
+                reject(new Error('Wait timeout'));
+            }, timeout);
+
             this.page.once('load', async () => {
+                if (limit) {
+                    clearTimeout(limit);
+                }
+
                 try {
                     await this.onNavigate();
                     resolve();

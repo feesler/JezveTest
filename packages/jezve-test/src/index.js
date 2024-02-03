@@ -32,7 +32,7 @@ export const url = () => env.url();
 
 export const getSelectedStory = () => env.getSelectedStory();
 
-export const navigation = (action) => env.navigation(action);
+export const navigation = (action, options) => env.navigation(action, options);
 
 export const setErrorHandler = () => env.setErrorHandler();
 
