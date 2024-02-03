@@ -664,6 +664,11 @@ class NodeEnvironment extends Environment {
             this.addResult(e);
         }
 
+        if (res !== 0) {
+            /* eslint-disable-next-line no-console */
+            console.log('Page URL: ', this.url());
+        }
+
         if (this.browser) {
             await this.browser.close();
             this.browser = null;
