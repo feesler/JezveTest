@@ -667,6 +667,10 @@ class NodeEnvironment extends Environment {
         if (res !== 0) {
             /* eslint-disable-next-line no-console */
             console.log('Page URL: ', this.url());
+
+            if (this.app.config.errorScreenshot) {
+                await this.screenshot(this.app.config.errorScreenshot);
+            }
         }
 
         if (this.browser) {
