@@ -30,8 +30,8 @@ class BrowserEnvironment extends Environment {
     }
 
     getSelectedStory() {
-        const { value } = this.storySelect;
-        return (value.length === 0) ? null : value;
+        const { selectedOptions } = this.storySelect;
+        return Array.from(selectedOptions).map((item) => item.value);
     }
 
     async parentNode(elem) {
@@ -583,6 +583,7 @@ class BrowserEnvironment extends Environment {
 
         const stories = this.app.scenario.getStorieNames();
         this.storySelect = createElement('select', {
+            multiple: true,
             children: ['', ...stories].map((story) => (
                 createElement('option', {
                     props: {
