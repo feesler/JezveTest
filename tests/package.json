@@ -9,6 +9,6 @@
         "test": "node index.js"
     },
     "dependencies": {
-        "jezve-test": "^2.2.1"
+        "jezve-test": "^2.3.0"
     }
 }
