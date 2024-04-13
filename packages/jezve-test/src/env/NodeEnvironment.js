@@ -31,10 +31,12 @@ class NodeEnvironment extends Environment {
 
     getSelectedStory() {
         if (process.argv.length < 3) {
-            return null;
+            return [];
         }
 
-        return process.argv[2];
+        const [, , ...res] = process.argv;
+
+        return res;
     }
 
     async parentNode(elem) {

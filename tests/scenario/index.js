@@ -27,14 +27,16 @@ export class Scenario {
     }
 
     async run() {
-        const story = getSelectedStory();
-        if (story) {
-            if (!this.checkSelectedStory(story)) {
-                return;
-            }
+        const stories = getSelectedStory();
+        if (stories.length > 0) {
+            for (const story of stories) {
+                if (!this.checkSelectedStory(story)) {
+                    return;
+                }
 
-            setBlock(`Running '${story}' test story`, 1);
-            await this.runStory(story);
+                setBlock(`Running '${story}' test story`, 1);
+                await this.runStory(story);
+            }
         } else {
             await this.runFullScenario();
         }
