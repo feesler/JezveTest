@@ -1,6 +1,6 @@
 {
     "name": "jezve-test",
-    "version": "2.3.0",
+    "version": "2.3.1",
     "type": "module",
     "module": "src/index.js",
     "description": "Testing utility written from scratch",
